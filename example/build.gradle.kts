@@ -1,6 +1,6 @@
 plugins {
     java
-    id("com.ncorti.kotlin.gradle.template.plugin")
+    id("dev.s7a.gradle.minecraft.server.plugin")
 }
 
 templateExampleConfig {

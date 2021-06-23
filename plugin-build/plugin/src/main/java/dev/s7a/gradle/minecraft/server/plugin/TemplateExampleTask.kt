@@ -1,4 +1,4 @@
-package com.ncorti.kotlin.gradle.template.plugin
+package dev.s7a.gradle.minecraft.server.plugin
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.RegularFileProperty

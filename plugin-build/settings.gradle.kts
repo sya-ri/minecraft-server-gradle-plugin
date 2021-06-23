@@ -6,6 +6,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = ("com.ncorti.kotlin.gradle.template")
+rootProject.name = ("dev.s7a.gradle.minecraft.server")
 
 include(":plugin")
