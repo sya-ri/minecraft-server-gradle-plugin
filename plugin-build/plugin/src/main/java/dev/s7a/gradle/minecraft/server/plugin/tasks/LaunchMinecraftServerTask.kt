@@ -1,6 +1,5 @@
-package dev.s7a.gradle.minecraft.server.plugin
+package dev.s7a.gradle.minecraft.server.plugin.tasks
 
-import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
@@ -8,10 +7,9 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.io.File
 
-abstract class LaunchMinecraftServerTask : DefaultTask() {
+abstract class LaunchMinecraftServerTask : MinecraftTask() {
     init {
         description = "Launch a Minecraft Server"
-        group = "minecraft"
     }
 
     @get:Input
