@@ -13,6 +13,8 @@ abstract class MinecraftServerPlugin : Plugin<Project> {
 
         project.tasks.register(TASK_NAME, LaunchMinecraftServerTask::class.java) {
             it.jarUrl.set(extension.jarUrl)
+            it.jarName.set(extension.jarName)
+            it.serverDirectory.set(extension.serverDirectory)
         }
     }
 }
