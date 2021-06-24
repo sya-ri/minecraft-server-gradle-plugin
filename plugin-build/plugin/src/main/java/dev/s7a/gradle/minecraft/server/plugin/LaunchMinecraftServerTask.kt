@@ -43,6 +43,13 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             )
             downloadFile(jarUrl, jarFile)
         }
+        project.javaexec {
+            it.run {
+                mainClass.set("-jar")
+                args(jarFile.absolutePath)
+                workingDir = serverDirectory
+            }
+        }
     }
 
     /**
