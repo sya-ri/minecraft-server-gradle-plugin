@@ -11,9 +11,7 @@ import java.io.File
 abstract class LaunchMinecraftServerTask : DefaultTask() {
     init {
         description = "Launch a Minecraft Server"
-
-        // Don't forget to set the group here.
-        // group = BasePlugin.BUILD_GROUP
+        group = "minecraft"
     }
 
     @get:Input
