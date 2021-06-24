@@ -17,6 +17,10 @@ abstract class MinecraftServerPlugin : Plugin<Project> {
             register("agreeMinecraftEULA", AgreeMinecraftEULATask::class.java) {
                 it.serverDirectory.set(extension.serverDirectory)
             }
+            register("refreshMinecraftServerJar", RefreshMinecraftServerJar::class.java) {
+                it.jarName.set(extension.jarName)
+                it.serverDirectory.set(extension.serverDirectory)
+            }
         }
     }
 }
