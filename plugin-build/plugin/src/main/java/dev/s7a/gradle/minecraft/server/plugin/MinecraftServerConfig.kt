@@ -2,6 +2,7 @@ package dev.s7a.gradle.minecraft.server.plugin
 
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import javax.inject.Inject
 
@@ -25,6 +26,11 @@ abstract class MinecraftServerConfig @Inject constructor(project: Project) {
     val serverDirectory: DirectoryProperty = objects.directoryProperty().convention(
         project.layout.buildDirectory.dir("MinecraftServer")
     )
+
+    /**
+     * Server Jar Name
+     */
+    val serverArgument: ListProperty<String> = objects.listProperty(String::class.java).convention(listOf())
 
     /**
      * Without Console GUI

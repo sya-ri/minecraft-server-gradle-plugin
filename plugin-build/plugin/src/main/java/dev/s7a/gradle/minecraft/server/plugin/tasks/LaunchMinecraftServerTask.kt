@@ -1,6 +1,7 @@
 package dev.s7a.gradle.minecraft.server.plugin.tasks
 
 import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -23,6 +24,10 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
     @get:Input
     @get:Option(option = "serverDirectory", description = "For storing server data.")
     abstract val serverDirectory: DirectoryProperty
+
+    @get:Input
+    @get:Option(option = "serverArgument", description = "Java arguments after .jar")
+    abstract val serverArgument: ListProperty<String>
 
     @get:Input
     @get:Option(option = "nogui", description = "Start without console GUI")
@@ -48,6 +53,7 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
                 mainClass.set("-jar")
                 val args = arrayListOf<String>()
                 args.add(jarFile.absolutePath)
+                args.addAll(serverArgument.get())
                 if (nogui.get()) {
                     args.add("-nogui")
                 }
