@@ -28,7 +28,12 @@ abstract class MinecraftServerConfig @Inject constructor(project: Project) {
     )
 
     /**
-     * Server Jar Name
+     * Java Arguments Before .jar
+     */
+    val jvmArgument: ListProperty<String> = objects.listProperty(String::class.java).convention(listOf())
+
+    /**
+     * Java Arguments After .jar
      */
     val serverArgument: ListProperty<String> = objects.listProperty(String::class.java).convention(listOf())
 

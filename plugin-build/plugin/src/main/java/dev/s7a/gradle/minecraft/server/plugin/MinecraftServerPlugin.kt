@@ -16,6 +16,7 @@ abstract class MinecraftServerPlugin : Plugin<Project> {
                 it.jarUrl.set(extension.jarUrl)
                 it.jarName.set(extension.jarName)
                 it.serverDirectory.set(extension.serverDirectory)
+                it.jvmArgument.set(extension.jvmArgument)
                 it.serverArgument.set(extension.serverArgument)
                 it.nogui.set(extension.nogui)
             }

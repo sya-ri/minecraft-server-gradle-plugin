@@ -26,6 +26,10 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
     abstract val serverDirectory: DirectoryProperty
 
     @get:Input
+    @get:Option(option = "jvmArgument", description = "Java arguments before .jar")
+    abstract val jvmArgument: ListProperty<String>
+
+    @get:Input
     @get:Option(option = "serverArgument", description = "Java arguments after .jar")
     abstract val serverArgument: ListProperty<String>
 
@@ -52,6 +56,7 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
         project.javaexec {
             it.run {
                 mainClass.set("-jar")
+                jvmArgs(jvmArgument.get())
                 args(
                     buildList<String> {
                         add(jarFile.absolutePath)
