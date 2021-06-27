@@ -59,6 +59,7 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
                 }
                 args(args)
                 workingDir = serverDirectory
+                logger.lifecycle(commandLine.joinToString(" "))
             }
         }
     }
