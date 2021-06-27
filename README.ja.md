@@ -2,12 +2,12 @@
 
 [![Pre Merge Checks](https://github.com/sya-ri/minecraft-server-gradle-plugin/workflows/Pre%20Merge%20Checks/badge.svg)](https://github.com/sya-ri/minecraft-server-gradle-plugin/actions?query=workflow%3A%22Pre+Merge+Checks%22)  [![License](https://img.shields.io/github/license/sya-ri/minecraft-server-gradle-plugin.svg)](LICENSE) ![Language](https://img.shields.io/github/languages/top/sya-ri/minecraft-server-gradle-plugin?color=blue&logo=kotlin)
 
-Launch a Minecraft Server Using Gradle Task. For Bukkit, Spigot, Paper, etc..
+Gradle タスクを使って、Minecraft サーバーを起動するためのプラグイン。Bukkit, Spigot, Paper 等に対応しています。
 
 - [English](README.md)
 - [日本語](README.ja.md)
 
-## Installation
+## 導入方法
 
 ### build.gradle
 
@@ -25,28 +25,28 @@ plugins {
 }
 ```
 
-## Options
+## オプション
 
-```kotin
+```kotlin
 minecraftServerConfig {
-    // Options
+    // ここに設定を記述
 }
 
-// or
+// もしくは
 
 configure<MinecraftServerConfig> {
-    // Options
+    // ここに設定を記述
 }
 ```
 
-| Name | Default | Description |
+| 名前 | デフォルト | 説明 |
 |---|---|---|
-| jarUrl | **Required**️ | URL to Download the .jar |
-| jarName | `server.jar` | Jar File Name After Download |
-| serverDirectory | `build/MinecraftServer` | Working Directory |
-| jvmArgument | `[]` | [Java Options](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html) |
-| serverArgument | `[]` | [Server Options](https://www.spigotmc.org/wiki/start-up-parameters/) |
-| nogui | `true` | Without Vanilla GUI |
+| jarUrl | **必須**️ | .jar をダウンロードするための URL |
+| jarName | `server.jar` | ダウンロード後のファイル名 |
+| serverDirectory | `build/MinecraftServer` | 作業ディレクトリ |
+| jvmArgument | `[]` | [Java のオプション](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html) |
+| serverArgument | `[]` | [Server のオプション](https://www.spigotmc.org/wiki/start-up-parameters/) |
+| nogui | `true` | バニラのGUIを使用しない |
 
 ## Example
 
