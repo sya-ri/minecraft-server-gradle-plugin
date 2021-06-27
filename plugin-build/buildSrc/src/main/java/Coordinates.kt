@@ -1,8 +1,8 @@
 object PluginCoordinates {
-    const val ID = "dev.s7a.gradle.minecraft.server.plugin"
+    const val ID = "dev.s7a.gradle.minecraft.server"
     const val GROUP = "dev.s7a.gradle.minecraft.server"
     const val VERSION = "1.0.0"
-    const val IMPLEMENTATION_CLASS = "dev.s7a.gradle.minecraft.server.plugin.MinecraftServerPlugin"
+    const val IMPLEMENTATION_CLASS = "dev.s7a.gradle.minecraft.server.MinecraftServerPlugin"
 }
 
 object PluginBundle {

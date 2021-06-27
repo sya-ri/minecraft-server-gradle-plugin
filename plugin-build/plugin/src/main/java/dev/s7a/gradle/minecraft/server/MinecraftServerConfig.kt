@@ -1,4 +1,4 @@
-package dev.s7a.gradle.minecraft.server.plugin
+package dev.s7a.gradle.minecraft.server
 
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty

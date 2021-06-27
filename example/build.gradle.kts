@@ -1,8 +1,8 @@
-import dev.s7a.gradle.minecraft.server.plugin.MinecraftServerConfig
+import dev.s7a.gradle.minecraft.server.MinecraftServerConfig
 
 plugins {
     java
-    id("dev.s7a.gradle.minecraft.server.plugin")
+    id("dev.s7a.gradle.minecraft.server")
 }
 
 configure<MinecraftServerConfig> {

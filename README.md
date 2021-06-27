@@ -13,7 +13,7 @@ Launch a Minecraft Server Using Gradle Task. For Bukkit, Spigot, Paper, etc..
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server.plugin' version '1.0.0'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.0'
 }
 ```
 
@@ -21,7 +21,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server.plugin") version "1.0.0"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.0"
 }
 ```
 
@@ -57,7 +57,7 @@ configure<MinecraftServerConfig> {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server.plugin' version '1.0.0'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.0'
 }
 
 minecraftServerConfig {
@@ -72,7 +72,7 @@ minecraftServerConfig {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server.plugin' version '1.0.0'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.0'
 }
 
 minecraftServerConfig {
@@ -89,7 +89,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server.plugin") version "1.0.0"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.0"
 }
 
 minecraftServerConfig {
@@ -104,7 +104,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server.plugin") version "1.0.0"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.0"
 }
 
 minecraftServerConfig {

@@ -1,4 +1,4 @@
-package dev.s7a.gradle.minecraft.server.plugin.tasks
+package dev.s7a.gradle.minecraft.server.tasks
 
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.ListProperty

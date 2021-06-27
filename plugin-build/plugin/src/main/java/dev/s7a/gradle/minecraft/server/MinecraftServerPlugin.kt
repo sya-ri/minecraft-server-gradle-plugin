@@ -1,8 +1,8 @@
-package dev.s7a.gradle.minecraft.server.plugin
+package dev.s7a.gradle.minecraft.server
 
-import dev.s7a.gradle.minecraft.server.plugin.tasks.AgreeMinecraftEULATask
-import dev.s7a.gradle.minecraft.server.plugin.tasks.LaunchMinecraftServerTask
-import dev.s7a.gradle.minecraft.server.plugin.tasks.RefreshMinecraftServerJarTask
+import dev.s7a.gradle.minecraft.server.tasks.AgreeMinecraftEULATask
+import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
+import dev.s7a.gradle.minecraft.server.tasks.RefreshMinecraftServerJarTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
