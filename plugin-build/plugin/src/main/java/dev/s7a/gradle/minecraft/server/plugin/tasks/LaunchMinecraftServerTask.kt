@@ -33,6 +33,7 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
     @get:Option(option = "nogui", description = "Start without console GUI")
     abstract val nogui: Property<Boolean>
 
+    @OptIn(ExperimentalStdlibApi::class)
     @TaskAction
     fun launchServer() {
         val jarUrl = jarUrl.orNull ?: error("jarUrl must not be null")
@@ -51,13 +52,15 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
         project.javaexec {
             it.run {
                 mainClass.set("-jar")
-                val args = arrayListOf<String>()
-                args.add(jarFile.absolutePath)
-                args.addAll(serverArgument.get())
-                if (nogui.get()) {
-                    args.add("-nogui")
-                }
-                args(args)
+                args(
+                    buildList<String> {
+                        add(jarFile.absolutePath)
+                        addAll(serverArgument.get())
+                        if (nogui.get()) {
+                            add("-nogui")
+                        }
+                    }
+                )
                 workingDir = serverDirectory
                 logger.lifecycle(commandLine.joinToString(" "))
             }
