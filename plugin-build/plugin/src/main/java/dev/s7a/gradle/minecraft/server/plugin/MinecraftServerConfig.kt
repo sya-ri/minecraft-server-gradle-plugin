@@ -25,4 +25,9 @@ abstract class MinecraftServerConfig @Inject constructor(project: Project) {
     val serverDirectory: DirectoryProperty = objects.directoryProperty().convention(
         project.layout.buildDirectory.dir("MinecraftServer")
     )
+
+    /**
+     * Without Console GUI
+     */
+    val nogui: Property<Boolean> = objects.property(Boolean::class.java).convention(true)
 }

@@ -24,6 +24,10 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
     @get:Option(option = "serverDirectory", description = "For storing server data.")
     abstract val serverDirectory: DirectoryProperty
 
+    @get:Input
+    @get:Option(option = "nogui", description = "Start without console GUI")
+    abstract val nogui: Property<Boolean>
+
     @TaskAction
     fun launchServer() {
         val jarUrl = jarUrl.orNull ?: error("jarUrl must not be null")
@@ -42,7 +46,12 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
         project.javaexec {
             it.run {
                 mainClass.set("-jar")
-                args(jarFile.absolutePath)
+                val args = arrayListOf<String>()
+                args.add(jarFile.absolutePath)
+                if (nogui.get()) {
+                    args.add("-nogui")
+                }
+                args(args)
                 workingDir = serverDirectory
             }
         }
