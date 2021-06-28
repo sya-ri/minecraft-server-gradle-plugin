@@ -36,6 +36,12 @@ pluginBundle {
             displayName = PluginBundle.DISPLAY_NAME
         }
     }
+
+    mavenCoordinates {
+        groupId = PluginCoordinates.GROUP
+        artifactId = PluginCoordinates.ID
+        version = PluginCoordinates.VERSION
+    }
 }
 
 tasks.create("setupPluginUploadFromEnvironment") {
