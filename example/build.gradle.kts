@@ -12,13 +12,15 @@ configure<MinecraftServerConfig> {
 
 task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     dependsOn("jar") // build task
+    doFirst {
+        copy {
+            from(buildDir.resolve("libs/example.jar")) // build/libs/example.jar
+            into(buildDir.resolve("MinecraftPaperServer/plugins")) // build/MinecraftPaperServer/plugins
+        }
+    }
 
     jarUrl.set("https://papermc.io/api/v1/paper/1.16.5/latest/download")
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)
-    copy {
-        from(buildDir.resolve("libs/example.jar")) // build/libs/example.jar
-        into(buildDir.resolve("MinecraftPaperServer/plugins")) // build/MinecraftPaperServer/plugins
-    }
 }
