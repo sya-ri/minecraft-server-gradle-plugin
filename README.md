@@ -113,3 +113,14 @@ minecraftServerConfig {
 ```
 
 </details>
+
+## Gradle Task
+
+### launchMinecraftServer
+Start the server.
+
+### agreeMinecraftEULA
+Agree to Minecraft EULA. Be sure to run it after `launchMinecraftServer`.
+
+### refreshMinecraftServerJar
+Delete server.jar and download it again.
