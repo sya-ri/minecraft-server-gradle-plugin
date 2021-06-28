@@ -117,6 +117,27 @@ minecraftServerConfig {
 
 </details>
 
+<details>
+<summary><strong>ビルドと同時にプラグインのテストを行う (Paper)</strong></summary>
+タスクを自分で定義することで、複数のサーバー構成を作成することができます。
+
+```kotlin
+task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
+    dependsOn("jar") // ビルドタスク (build, jar, shadowJar, ...)
+
+    jarUrl.set("https://papermc.io/api/v1/paper/1.16.5/latest/download")
+    jarName.set("server.jar")
+    serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
+    nogui.set(true)
+    copy {
+        from(buildDir.resolve("libs/example.jar")) // build/libs/example.jar
+        into(buildDir.resolve("MinecraftPaperServer/plugins")) // build/MinecraftPaperServer/plugins
+    }
+}
+```
+
+</details>
+
 ## Gradle Task
 
 ### launchMinecraftServer
