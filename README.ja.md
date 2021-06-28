@@ -120,7 +120,7 @@ minecraftServerConfig {
 サーバーを起動します。
 
 ### agreeMinecraftEULA
-Minecraft EULA に同意します. 必ず `launchMinecraftServer` の後に実行してください。
+Minecraft EULA に同意します。必ず `launchMinecraftServer` の後に実行してください。
 
 ### refreshMinecraftServerJar
 server.jar を削除し、再度ダウンロードします。
