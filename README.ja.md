@@ -16,7 +16,7 @@ Gradle タスクを使って、Minecraft サーバーを起動するためのプ
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.0'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
 }
 ```
 
@@ -24,7 +24,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.0"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
 }
 ```
 
@@ -60,7 +60,7 @@ configure<MinecraftServerConfig> {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.0'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
 }
 
 minecraftServerConfig {
@@ -75,7 +75,7 @@ minecraftServerConfig {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.0'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
 }
 
 minecraftServerConfig {
@@ -92,7 +92,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.0"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
 }
 
 minecraftServerConfig {
@@ -107,7 +107,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.0"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
 }
 
 minecraftServerConfig {
