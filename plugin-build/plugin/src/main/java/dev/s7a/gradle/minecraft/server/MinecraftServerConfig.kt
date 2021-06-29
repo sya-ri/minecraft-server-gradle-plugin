@@ -1,9 +1,6 @@
 package dev.s7a.gradle.minecraft.server
 
 import org.gradle.api.Project
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.provider.ListProperty
-import org.gradle.api.provider.Property
 import javax.inject.Inject
 
 @Suppress("UnnecessaryAbstractClass")
@@ -21,30 +18,30 @@ abstract class MinecraftServerConfig @Inject constructor(project: Project) {
     /**
      * Server Jar Download Url
      */
-    val jarUrl: Property<String> = objects.property(String::class.java)
+    val jarUrl = objects.property(String::class.java)
 
     /**
      * Server Jar Name
      */
-    val jarName: Property<String> = objects.property(String::class.java).convention(Default.jarName)
+    val jarName = objects.property(String::class.java).convention(Default.jarName)
 
     /**
      * Server Directory
      */
-    val serverDirectory: DirectoryProperty = objects.directoryProperty().convention(Default.serverDirectory(project))
+    val serverDirectory = objects.directoryProperty().convention(Default.serverDirectory(project))
 
     /**
      * Java Arguments Before .jar
      */
-    val jvmArgument: ListProperty<String> = objects.listProperty(String::class.java).convention(Default.jvmArgument)
+    val jvmArgument = objects.listProperty(String::class.java).convention(Default.jvmArgument)
 
     /**
      * Java Arguments After .jar
      */
-    val serverArgument: ListProperty<String> = objects.listProperty(String::class.java).convention(Default.serverArgument)
+    val serverArgument = objects.listProperty(String::class.java).convention(Default.serverArgument)
 
     /**
      * Without Console GUI
      */
-    val nogui: Property<Boolean> = objects.property(Boolean::class.java).convention(Default.nogui)
+    val nogui = objects.property(Boolean::class.java).convention(Default.nogui)
 }
