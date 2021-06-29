@@ -20,7 +20,5 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     }
 
     jarUrl.set("https://papermc.io/api/v1/paper/1.16.5/latest/download")
-    jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
-    nogui.set(true)
 }
