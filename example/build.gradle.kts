@@ -21,4 +21,5 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
 
     jarUrl.set("https://papermc.io/api/v1/paper/1.16.5/latest/download")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
+    agreeEula.set(true)
 }

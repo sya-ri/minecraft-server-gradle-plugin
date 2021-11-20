@@ -19,6 +19,7 @@ abstract class MinecraftServerPlugin : Plugin<Project> {
                 it.jvmArgument.set(extension.jvmArgument)
                 it.serverArgument.set(extension.serverArgument)
                 it.nogui.set(extension.nogui)
+                it.agreeEula.set(extension.agreeEula)
             }
             register("agreeMinecraftEULA", AgreeMinecraftEULATask::class.java) {
                 it.serverDirectory.set(extension.serverDirectory)

@@ -11,6 +11,7 @@ abstract class MinecraftServerConfig @Inject constructor(project: Project) {
         val jvmArgument = listOf<String>()
         val serverArgument = listOf<String>()
         const val nogui = true
+        const val agreeEula = false
     }
 
     private val objects = project.objects
@@ -44,4 +45,9 @@ abstract class MinecraftServerConfig @Inject constructor(project: Project) {
      * Without Console GUI
      */
     val nogui = objects.property(Boolean::class.java).convention(Default.nogui)
+
+    /**
+     * Agree EULA
+     */
+    val agreeEula = objects.property(Boolean::class.java).convention(Default.agreeEula)
 }

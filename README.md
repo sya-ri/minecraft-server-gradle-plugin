@@ -16,7 +16,7 @@ Launch a Minecraft Server Using Gradle Task. For Bukkit, Spigot, Paper, etc..
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.2'
 }
 ```
 
@@ -24,7 +24,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.2"
 }
 ```
 
@@ -50,6 +50,7 @@ configure<MinecraftServerConfig> {
 | jvmArgument | `[]` | [Java Options](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html) |
 | serverArgument | `[]` | [Server Options](https://www.spigotmc.org/wiki/start-up-parameters/) |
 | nogui | `true` | Without Vanilla GUI |
+| agreeEula | `false` | Agree to the Minecraft EULA |
 
 ## Example
 
@@ -60,7 +61,7 @@ configure<MinecraftServerConfig> {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.2'
 }
 
 minecraftServerConfig {
@@ -75,7 +76,7 @@ minecraftServerConfig {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.2'
 }
 
 minecraftServerConfig {
@@ -92,7 +93,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.2"
 }
 
 minecraftServerConfig {
@@ -107,7 +108,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.2"
 }
 
 minecraftServerConfig {
@@ -135,6 +136,7 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)
+    agreeEula.set(false)
 }
 ```
 

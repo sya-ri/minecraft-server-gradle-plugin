@@ -16,7 +16,7 @@ Gradle タスクを使って、Minecraft サーバーを起動するためのプ
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.2'
 }
 ```
 
@@ -24,7 +24,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.2"
 }
 ```
 
@@ -42,14 +42,15 @@ configure<MinecraftServerConfig> {
 }
 ```
 
-| 名前 | デフォルト | 説明 |
-|---|---|---|
-| jarUrl | **必須**️ | .jar をダウンロードするための URL |
-| jarName | `server.jar` | ダウンロード後のファイル名 |
-| serverDirectory | `build/MinecraftServer` | 作業ディレクトリ |
+| 名前 | デフォルト | 説明                                                                                     |
+|---|---|----------------------------------------------------------------------------------------|
+| jarUrl | **必須**️ | .jar をダウンロードするための URL                                                                  |
+| jarName | `server.jar` | ダウンロード後のファイル名                                                                          |
+| serverDirectory | `build/MinecraftServer` | 作業ディレクトリ                                                                               |
 | jvmArgument | `[]` | [Java のオプション](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html) |
-| serverArgument | `[]` | [Server のオプション](https://www.spigotmc.org/wiki/start-up-parameters/) |
-| nogui | `true` | バニラのGUIを使用しない |
+| serverArgument | `[]` | [Server のオプション](https://www.spigotmc.org/wiki/start-up-parameters/)                    |
+| nogui | `true` | バニラのGUIを使用しない                                                                          |
+| agreeEula | `false` | マインクラフトのユーザーライセンスに同意する |                                                                 |                                                                              |
 
 ## Example
 
@@ -60,7 +61,7 @@ configure<MinecraftServerConfig> {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.2'
 }
 
 minecraftServerConfig {
@@ -75,7 +76,7 @@ minecraftServerConfig {
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.0.1'
+    id 'dev.s7a.gradle.minecraft.server' version '1.0.2'
 }
 
 minecraftServerConfig {
@@ -92,7 +93,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.2"
 }
 
 minecraftServerConfig {
@@ -107,7 +108,7 @@ minecraftServerConfig {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.0.1"
+    id("dev.s7a.gradle.minecraft.server") version "1.0.2"
 }
 
 minecraftServerConfig {
@@ -135,6 +136,7 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)
+    agreeEula.set(false)
 }
 ```
 

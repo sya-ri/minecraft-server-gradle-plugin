@@ -74,6 +74,17 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
     private val noguiOrDefault
         get() = nogui.orElse(DefaultConfig.nogui)
 
+    @get:Input
+    @get:Optional
+    @get:Option(option = "agreeEula", description = "Agree to the Minecraft EULA")
+    abstract val agreeEula: Property<Boolean>
+
+    /**
+     * @see agreeEula
+     */
+    private val agreeEulaOrDefault
+        get() = agreeEula.orElse(DefaultConfig.agreeEula)
+
     @TaskAction
     fun launchServer() {
         val jarUrl = jarUrl.get()
@@ -88,6 +99,12 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
                 """.trimIndent()
             )
             downloadFile(jarUrl, jarFile)
+        }
+        if (agreeEulaOrDefault.get()) {
+            val eulaFile = serverDirectory.resolve("eula.txt")
+            if (eulaFile.exists().not() || eulaFile.readText().contains("eula=true").not()) {
+                eulaFile.writeText("eula=true")
+            }
         }
         project.javaexec {
             it.run {
