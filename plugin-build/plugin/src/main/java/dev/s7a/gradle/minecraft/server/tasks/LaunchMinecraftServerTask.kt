@@ -118,6 +118,7 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
                 }
                 args(args)
                 workingDir = serverDirectory
+                standardInput = System.`in`
                 logger.lifecycle(commandLine.joinToString(" "))
             }
         }
