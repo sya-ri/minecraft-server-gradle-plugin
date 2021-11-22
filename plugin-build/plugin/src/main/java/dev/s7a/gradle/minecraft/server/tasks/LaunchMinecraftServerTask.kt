@@ -1,5 +1,8 @@
 package dev.s7a.gradle.minecraft.server.tasks
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
@@ -8,6 +11,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.io.File
+import java.net.URL
 import dev.s7a.gradle.minecraft.server.MinecraftServerConfig.Default as DefaultConfig
 
 abstract class LaunchMinecraftServerTask : MinecraftTask() {
@@ -131,5 +135,31 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
      */
     private fun downloadFile(url: String, dest: File) {
         ant.invokeMethod("get", mapOf("src" to url, "dest" to dest))
+    }
+
+    /**
+     * .jar のダウンロードファイル
+     */
+    object JarUrl {
+        /**
+         * [Paper](https://papermc.io) を [jarUrl] として使う
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.17.1"))
+         * ```
+         *
+         * @param version バージョン
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun Paper(version: String): String {
+            @Serializable
+            data class Version(val builds: List<Int>)
+
+            val versionsUrl = "https://papermc.io/api/v2/projects/paper/versions"
+            val versionsJson = URL("$versionsUrl/$version").readText()
+            val build = Json { ignoreUnknownKeys = true }.decodeFromString<Version>(versionsJson).builds.maxOrNull()
+            return "$versionsUrl/$version/builds/$build/downloads/paper-$version-$build.jar"
+        }
     }
 }

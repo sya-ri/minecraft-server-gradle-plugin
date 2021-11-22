@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization") version BuildPluginsVersion.KOTLIN
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish")
 }
@@ -7,6 +8,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk7"))
     implementation(gradleApi())
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
 }
 
 java {

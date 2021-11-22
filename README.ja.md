@@ -80,7 +80,7 @@ plugins {
 }
 
 minecraftServerConfig {
-    jarUrl.set('https://papermc.io/api/v1/paper/1.16.5/latest/download')
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.16.5"))
 }
 ```
 
@@ -112,7 +112,7 @@ plugins {
 }
 
 minecraftServerConfig {
-    jarUrl.set("https://papermc.io/api/v1/paper/1.16.5/latest/download")
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.16.5"))
 }
 ```
 
@@ -132,7 +132,7 @@ task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
         }
     }
     
-    jarUrl.set("https://papermc.io/api/v1/paper/1.16.5/latest/download")
+    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.16.5"))
     jarName.set("server.jar")
     serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
     nogui.set(true)
