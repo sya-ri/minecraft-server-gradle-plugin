@@ -1,13 +1,15 @@
 package dev.s7a.gradle.minecraft.server.tasks
 
+import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.io.File
 
-abstract class AgreeMinecraftEULATask : MinecraftTask() {
+abstract class AgreeMinecraftEULATask : DefaultTask() {
     init {
+        group = "minecraft"
         description = "Agree to the Minecraft EULA (run after launchMinecraftServer)"
     }
 

@@ -3,6 +3,7 @@ package dev.s7a.gradle.minecraft.server.tasks
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
@@ -14,8 +15,9 @@ import java.io.File
 import java.net.URL
 import dev.s7a.gradle.minecraft.server.MinecraftServerConfig.Default as DefaultConfig
 
-abstract class LaunchMinecraftServerTask : MinecraftTask() {
+abstract class LaunchMinecraftServerTask : DefaultTask() {
     init {
+        group = "minecraft"
         description = "Launch a Minecraft Server"
     }
 
