@@ -143,6 +143,8 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * .jar のダウンロードファイル
      */
     object JarUrl {
+        private val json = Json { ignoreUnknownKeys = true }
+
         /**
          * [Paper](https://papermc.io) を [jarUrl] として使う
          *
@@ -160,7 +162,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
 
             val versionsUrl = "https://papermc.io/api/v2/projects/paper/versions"
             val versionsJson = URL("$versionsUrl/$version").readText()
-            val build = Json { ignoreUnknownKeys = true }.decodeFromString<Version>(versionsJson).builds.maxOrNull()
+            val build = json.decodeFromString<Version>(versionsJson).builds.maxOrNull()
             return "$versionsUrl/$version/builds/$build/downloads/paper-$version-$build.jar"
         }
     }
