@@ -118,7 +118,7 @@ abstract class LaunchMinecraftServerTask : MinecraftTask() {
                 args.add(jarFile.absolutePath)
                 args.addAll(serverArgumentOrDefault.get())
                 if (noguiOrDefault.get()) {
-                    args.add("-nogui")
+                    args.add("nogui")
                 }
                 args(args)
                 workingDir = serverDirectory
