@@ -95,16 +95,24 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     fun launchServer() {
         val jarUrl = jarUrl.get()
         val serverDirectory = serverDirectoryOrDefault.get().asFile.apply(File::mkdirs)
-        val jarFile = serverDirectory.resolve(jarNameOrDefault.get())
-        if (jarFile.exists().not()) {
+        val jarName = jarNameOrDefault.get()
+        val jarFile = serverDirectory.resolve(jarName)
+        val jarVersionFile = serverDirectory.resolve("$jarName.txt")
+        val downloadMessage = when {
+            jarFile.exists().not() -> ""
+            jarVersionFile.exists().not() || jarVersionFile.readText() != jarUrl -> "(Auto-Refresh)"
+            else -> null
+        }
+        if (downloadMessage != null) {
             logger.lifecycle(
                 """
-                    Download Jar
+                    Download Jar $downloadMessage
                         url : $jarUrl
                         dest : ${jarFile.absolutePath}
                 """.trimIndent()
             )
             downloadFile(jarUrl, jarFile)
+            jarVersionFile.writeText(jarUrl)
         }
         if (agreeEulaOrDefault.get()) {
             val eulaFile = serverDirectory.resolve("eula.txt")
