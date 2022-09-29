@@ -13,7 +13,6 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.io.File
 import java.net.URL
-import dev.s7a.gradle.minecraft.server.MinecraftServerConfig.Default as DefaultConfig
 
 abstract class LaunchMinecraftServerTask : DefaultTask() {
     init {
@@ -34,7 +33,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @see jarName
      */
     private val jarNameOrDefault
-        get() = jarName.orElse(DefaultConfig.jarName)
+        get() = jarName.orElse("server.jar")
 
     @get:Input
     @get:Optional
@@ -45,7 +44,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @see serverDirectory
      */
     private val serverDirectoryOrDefault
-        get() = serverDirectory.orElse(DefaultConfig.serverDirectory(project))
+        get() = serverDirectory.orElse(project.layout.buildDirectory.dir("MinecraftServer"))
 
     @get:Input
     @get:Optional
@@ -56,7 +55,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @see jvmArgument
      */
     private val jvmArgumentOrDefault
-        get() = jvmArgument.orElse(DefaultConfig.jvmArgument)
+        get() = jvmArgument.orElse(listOf())
 
     @get:Input
     @get:Optional
@@ -67,7 +66,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @see serverArgument
      */
     private val serverArgumentOrDefault
-        get() = serverArgument.orElse(DefaultConfig.serverArgument)
+        get() = serverArgument.orElse(listOf())
 
     @get:Input
     @get:Optional
@@ -78,7 +77,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @see nogui
      */
     private val noguiOrDefault
-        get() = nogui.orElse(DefaultConfig.nogui)
+        get() = nogui.orElse(true)
 
     @get:Input
     @get:Optional
@@ -89,7 +88,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @see agreeEula
      */
     private val agreeEulaOrDefault
-        get() = agreeEula.orElse(DefaultConfig.agreeEula)
+        get() = agreeEula.orElse(false)
 
     @TaskAction
     fun launchServer() {
@@ -148,19 +147,19 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     }
 
     /**
-     * .jar のダウンロードファイル
+     * @see jarUrl
      */
     object JarUrl {
         private val json = Json { ignoreUnknownKeys = true }
 
         /**
-         * [Paper](https://papermc.io) を [jarUrl] として使う
+         * Using [Paper](https://papermc.io) as [jarUrl].
          *
          * ```
          * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.17.1"))
          * ```
          *
-         * @param version バージョン
+         * @param version Paper version
          * @return URL
          */
         @Suppress("FunctionName")

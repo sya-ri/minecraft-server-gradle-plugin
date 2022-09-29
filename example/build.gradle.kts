@@ -1,4 +1,3 @@
-import dev.s7a.gradle.minecraft.server.MinecraftServerConfig
 import dev.s7a.gradle.minecraft.server.tasks.LaunchMinecraftServerTask
 
 plugins {
@@ -13,10 +12,6 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
-}
-
-configure<MinecraftServerConfig> {
-    jarUrl.set("https://cdn.getbukkit.org/craftbukkit/craftbukkit-1.16.5.jar")
 }
 
 task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
