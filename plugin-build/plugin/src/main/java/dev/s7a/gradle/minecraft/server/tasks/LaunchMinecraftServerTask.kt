@@ -152,6 +152,9 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     object JarUrl {
         private val json = Json { ignoreUnknownKeys = true }
 
+        @Serializable
+        private data class Version(val builds: List<Int>)
+
         /**
          * Using [Paper](https://papermc.io) as [jarUrl].
          *
@@ -159,18 +162,51 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.17.1"))
          * ```
          *
-         * @param version Paper version
+         * @param version [Paper version](https://papermc.io/api/v2/projects/paper)
          * @return URL
          */
         @Suppress("FunctionName")
         fun Paper(version: String): String {
-            @Serializable
-            data class Version(val builds: List<Int>)
-
             val versionsUrl = "https://papermc.io/api/v2/projects/paper/versions"
             val versionsJson = URL("$versionsUrl/$version").readText()
             val build = json.decodeFromString<Version>(versionsJson).builds.maxOrNull()
             return "$versionsUrl/$version/builds/$build/downloads/paper-$version-$build.jar"
+        }
+
+        /**
+         * Using [Velocity](https://papermc.io) as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Velocity("3.1.2-SNAPSHOT"))
+         * ```
+         *
+         * @param version [Velocity version](https://papermc.io/api/v2/projects/velocity).
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun Velocity(version: String): String {
+            val versionsUrl = "https://papermc.io/api/v2/projects/velocity/versions"
+            val versionsJson = URL("$versionsUrl/$version").readText()
+            val build = json.decodeFromString<Version>(versionsJson).builds.maxOrNull()
+            return "$versionsUrl/$version/builds/$build/downloads/velocity-$version-$build.jar"
+        }
+
+        /**
+         * Using [Waterfall](https://papermc.io) as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Waterfall("1.19"))
+         * ```
+         *
+         * @param version [Waterfall version](https://papermc.io/api/v2/projects/waterfall).
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun Waterfall(version: String): String {
+            val versionsUrl = "https://papermc.io/api/v2/projects/waterfall/versions"
+            val versionsJson = URL("$versionsUrl/$version").readText()
+            val build = json.decodeFromString<Version>(versionsJson).builds.maxOrNull()
+            return "$versionsUrl/$version/builds/$build/downloads/waterfall-$version-$build.jar"
         }
     }
 }
