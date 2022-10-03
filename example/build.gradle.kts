@@ -17,7 +17,8 @@ dependencies {
 
 task<LaunchMinecraftServerTask>("launchMinecraftServer") {
     jarUrl.set(JarUrl.Paper("1.19.2"))
-    agreeEula.set(true)
+    // agreeEula.set(true)
+    agreeEula.set(false)
 }
 
 task<LaunchMinecraftServerTask>("testPlugin") {
