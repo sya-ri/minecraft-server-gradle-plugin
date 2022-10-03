@@ -5,10 +5,7 @@
 ![Language](https://img.shields.io/github/languages/top/sya-ri/minecraft-server-gradle-plugin?color=blue&logo=kotlin)
 [![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v/https/plugins.gradle.org/m2/dev/s7a/gradle/minecraft/server/dev.s7a.gradle.minecraft.server/maven-metadata.xml.svg?colorB=007ec6&label=Gradle%20Plugin%20Portal)](https://plugins.gradle.org/plugin/dev.s7a.gradle.minecraft.server)
 
-Launch a Minecraft Server Using Gradle Task. For Bukkit, Spigot, Paper, etc..
-
-- [English](README.md)
-- [日本語](README.ja.md)
+Launch Minecraft servers using Gradle task. For Bukkit, Spigot, Paper, etc..
 
 ## Installation
 
@@ -16,7 +13,7 @@ Launch a Minecraft Server Using Gradle Task. For Bukkit, Spigot, Paper, etc..
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.2.0'
+    id 'dev.s7a.gradle.minecraft.server' version '2.0.0'
 }
 ```
 
@@ -24,131 +21,89 @@ plugins {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.2.0"
+    id("dev.s7a.gradle.minecraft.server") version "2.0.0"
 }
 ```
 
 ## Options
 
-```kotin
-minecraftServerConfig {
-    // Options
-}
-
-// or
-
-configure<MinecraftServerConfig> {
-    // Options
-}
-```
-
-| Name | Default | Description |
-|---|---|---|
-| jarUrl | **Required**️ | URL to Download the .jar |
-| jarName | `server.jar` | Jar File Name After Download |
-| serverDirectory | `build/MinecraftServer` | Working Directory |
-| jvmArgument | `[]` | [Java Options](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html) |
-| serverArgument | `[]` | [Server Options](https://www.spigotmc.org/wiki/start-up-parameters/) |
-| nogui | `true` | Without Vanilla GUI |
-| agreeEula | `false` | Agree to the Minecraft EULA |
+| Name            | Default                 | Description                                                                             |
+|-----------------|-------------------------|-----------------------------------------------------------------------------------------|
+| jarUrl          | **Required**️           | URL to Download the .jar                                                                |
+| jarName         | `server.jar`            | Jar File Name After Download                                                            |
+| serverDirectory | `build/MinecraftServer` | Working Directory                                                                       |
+| jvmArgument     | `[]`                    | [Java Options](https://docs.oracle.com/javase/7/docs/technotes/tools/windows/java.html) |
+| serverArgument  | `[]`                    | [Server Options](https://www.spigotmc.org/wiki/start-up-parameters/)                    |
+| nogui           | `true`                  | Without Vanilla GUI                                                                     |
+| agreeEula       | `false`                 | Agree to the Minecraft EULA                                                             |
 
 ## Example
 
-### build.gradle
+> :warning: This plugin doesn't have a default task. So you have to define it yourself.
 
-<details>
-<summary><strong>Spigot 1.16.5</strong></summary>
+### Simple usage
 
-```groovy
-plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.2.0'
-}
-
-minecraftServerConfig {
-    jarUrl.set('https://cdn.getbukkit.org/craftbukkit/craftbukkit-1.16.5.jar"')
-}
-```
-
-</details>
-
-<details>
-<summary><strong>Paper 1.16.5</strong></summary>
-
-```groovy
-plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '1.2.0'
-}
-
-minecraftServerConfig {
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.16.5"))
-}
-```
-
-</details>
-
-### build.gradle.kts
-
-<details>
-<summary><strong>Spigot 1.16.5</strong></summary>
+#### build.gradle.kts
 
 ```kotlin
-plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.2.0"
-}
-
-minecraftServerConfig {
-    jarUrl.set("https://cdn.getbukkit.org/craftbukkit/craftbukkit-1.16.5.jar")
+task<LaunchMinecraftServerTask>("launchMinecraftServer") {
+    jarUrl.set(JarUrl.Paper("1.19.2"))
+    agreeEula.set(true)
 }
 ```
 
-</details>
+### For testing a plugin
 
-<details>
-<summary><strong>Paper 1.16.5</strong></summary>
-
-```kotlin
-plugins {
-    id("dev.s7a.gradle.minecraft.server") version "1.2.0"
-}
-
-minecraftServerConfig {
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.16.5"))
-}
-```
-
-</details>
-
-<details>
-<summary><strong>Build and Test Plugin (Paper)</strong></summary>
-Create multiple server configurations by defining the tasks.
+#### build.gradle.kts
 
 ```kotlin
-task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
-    dependsOn("jar") // build task (build, jar, shadowJar, ...)
+task<LaunchMinecraftServerTask>("testPlugin") {
+    dependsOn("build")
+
     doFirst {
         copy {
-            from(buildDir.resolve("libs/example.jar")) // build/libs/example.jar
-            into(buildDir.resolve("MinecraftPaperServer/plugins")) // build/MinecraftPaperServer/plugins
+            from(buildDir.resolve("libs/example.jar"))
+            into(buildDir.resolve("MinecraftServer/plugins"))
         }
     }
-    
-    jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.16.5"))
-    jarName.set("server.jar")
-    serverDirectory.set(buildDir.resolve("MinecraftPaperServer")) // build/MinecraftPaperServer
-    nogui.set(true)
-    agreeEula.set(false)
+
+    jarUrl.set(JarUrl.Paper("1.19.2"))
+    agreeEula.set(true)
 }
 ```
 
-</details>
+### For testing a multi-version supporting plugin
 
-## Gradle Task
+#### build.gradle.kts
 
-### launchMinecraftServer
-Start the server.
+```kotlin
+listOf(
+    "8" to "1.8.8",
+    "9" to "1.9.4",
+    "10" to "1.10.2",
+    "11" to "1.11.2",
+    "12" to "1.12.2",
+    "13" to "1.13.2",
+    "14" to "1.14.4",
+    "15" to "1.15.2",
+    "16" to "1.16.5",
+    "17" to "1.17.1",
+    "18" to "1.18.2",
+    "19" to "1.19.2"
+).forEach { (name, version) ->
+    task<LaunchMinecraftServerTask>("testPlugin$name") {
+        dependsOn("build")
 
-### agreeMinecraftEULA
-Agree to Minecraft EULA. Be sure to run it after `launchMinecraftServer`.
+        doFirst {
+            copy {
+                from(buildDir.resolve("libs/example.jar"))
+                into(buildDir.resolve("MinecraftServer$name/plugins"))
+            }
+        }
 
-### refreshMinecraftServerJar
-Delete server.jar and download it again.
+        serverDirectory.set(buildDir.resolve("MinecraftServer$name"))
+        jarUrl.set(JarUrl.Paper(version))
+        agreeEula.set(true)
+    }
+}
+```
