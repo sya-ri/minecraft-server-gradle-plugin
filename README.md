@@ -63,7 +63,7 @@ task<LaunchMinecraftServerTask>("testPlugin") {
 
     doFirst {
         copy {
-            from(buildDir.resolve("libs/example.jar"))
+            from(buildDir.resolve("libs/${project.name}.jar"))
             into(buildDir.resolve("MinecraftServer/plugins"))
         }
     }
@@ -97,7 +97,7 @@ listOf(
 
         doFirst {
             copy {
-                from(buildDir.resolve("libs/example.jar"))
+                from(buildDir.resolve("libs/${project.name}.jar"))
                 into(buildDir.resolve("MinecraftServer$name/plugins"))
             }
         }
