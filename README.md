@@ -39,7 +39,8 @@ plugins {
 
 ## Example
 
-> :warning: This plugin doesn't have a default task. So you have to define it yourself.
+> **Warning**
+> This plugin doesn't have a default task. So you have to define it yourself.
 
 ### Simple usage
 
