@@ -238,6 +238,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          */
         @Suppress("FunctionName")
         fun Fabric(minecraftVersion: String, loaderVersion: String): String {
+            val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
             val installerVersionsUrl = "https://meta.fabricmc.net/v2/versions/installer"
             val installerVersionsJson = URL(installerVersionsUrl).readText()
             val latestInstallerVersion =
@@ -250,7 +251,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                         )
                     ).asReversed()[0].version
 
-            return "$fabricApiUrl/versions/loader/$minecraftVersion/$loaderVersion/$latestInstallerVersion/server/jar"
+            return "$loaderVersionsUrl/$minecraftVersion/$loaderVersion/$latestInstallerVersion/server/jar"
         }
 
         /**
