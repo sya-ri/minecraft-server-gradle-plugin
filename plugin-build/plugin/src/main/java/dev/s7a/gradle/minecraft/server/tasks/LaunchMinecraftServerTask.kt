@@ -151,7 +151,6 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      */
     object JarUrl {
         private val json = Json { ignoreUnknownKeys = true }
-        private const val fabricApiUrl = "https://meta.fabricmc.net/v2"
 
         @Serializable
         private data class Version(val builds: List<Int>)
@@ -239,7 +238,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          */
         @Suppress("FunctionName")
         fun Fabric(minecraftVersion: String, loaderVersion: String): String {
-            val installerVersionsUrl = "$fabricApiUrl/versions/installer"
+            val installerVersionsUrl = "https://meta.fabricmc.net/v2/versions/installer"
             val installerVersionsJson = URL(installerVersionsUrl).readText()
             val latestInstallerVersion =
                 json.decodeFromString<List<FabricInstallerVersion>>(installerVersionsJson).filter { it.stable }
@@ -266,7 +265,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          */
         @Suppress("FunctionName")
         fun Fabric(minecraftVersion: String): String {
-            val loaderVersionsUrl = "$fabricApiUrl/versions/loader"
+            val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
             val loaderVersionsJson = URL(loaderVersionsUrl).readText()
             val latestLoaderVersion =
                 json.decodeFromString<List<FabricLoaderVersion>>(loaderVersionsJson).filter { it.stable }.sortedWith(
