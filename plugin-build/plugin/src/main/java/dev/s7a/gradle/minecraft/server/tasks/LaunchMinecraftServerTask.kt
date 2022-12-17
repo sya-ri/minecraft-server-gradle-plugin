@@ -151,9 +151,26 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      */
     object JarUrl {
         private val json = Json { ignoreUnknownKeys = true }
+        private const val fabricApiUrl = "https://meta.fabricmc.net/v2"
 
         @Serializable
         private data class Version(val builds: List<Int>)
+
+        @Serializable
+        private data class FabricInstallerVersion(
+            val url: String,
+            val maven: String,
+            val version: String,
+            val stable: Boolean
+        )
+
+        @Serializable
+        private data class FabricLoaderVersion(
+            val separator: String,
+            val maven: String,
+            val version: String,
+            val stable: Boolean
+        )
 
         /**
          * Using [Paper](https://papermc.io) as [jarUrl].
@@ -207,6 +224,59 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val versionsJson = URL("$versionsUrl/$version").readText()
             val build = json.decodeFromString<Version>(versionsJson).builds.maxOrNull()
             return "$versionsUrl/$version/builds/$build/downloads/waterfall-$version-$build.jar"
+        }
+
+        /**
+         * Using [Fabric](https://fabricmc.net) as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Fabric("1.19.2", "0.14.11"))
+         * ```
+         *
+         * @param minecraftVersion [Minecraft version](https://meta.fabricmc.net/v2/versions/game).
+         * @param loaderVersion [Fabric Loader version](https://meta.fabricmc.net/v2/versions/loader)
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun Fabric(minecraftVersion: String, loaderVersion: String): String {
+            val installerVersionsUrl = "$fabricApiUrl/versions/installer"
+            val installerVersionsJson = URL(installerVersionsUrl).readText()
+            val latestInstallerVersion =
+                json.decodeFromString<List<FabricInstallerVersion>>(installerVersionsJson).filter { it.stable }
+                    .sortedWith(
+                        compareBy(
+                            { it.version.split(".")[0] },
+                            { it.version.split(".")[1] },
+                            { it.version.split(".")[2] }
+                        )
+                    ).asReversed()[0].version
+
+            return "$fabricApiUrl/versions/loader/$minecraftVersion/$loaderVersion/$latestInstallerVersion/server/jar"
+        }
+
+        /**
+         * Using [Fabric](https://fabricmc.net) as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Fabric("1.19.2"))
+         * ```
+         *
+         * @param minecraftVersion [Minecraft version](https://meta.fabricmc.net/v2/versions/game).
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun Fabric(minecraftVersion: String): String {
+            val loaderVersionsUrl = "$fabricApiUrl/versions/loader"
+            val loaderVersionsJson = URL(loaderVersionsUrl).readText()
+            val latestLoaderVersion =
+                json.decodeFromString<List<FabricLoaderVersion>>(loaderVersionsJson).filter { it.stable }.sortedWith(
+                    compareBy(
+                        { it.version.split(it.separator)[0] },
+                        { it.version.split(it.separator)[1] },
+                        { it.version.split(it.separator)[2] }
+                    )
+                ).asReversed()[0].version
+            return Fabric(minecraftVersion, latestLoaderVersion)
         }
     }
 }
