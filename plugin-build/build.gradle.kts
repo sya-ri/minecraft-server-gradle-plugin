@@ -2,7 +2,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
     kotlin("jvm") version "1.7.22" apply false
-    id("com.gradle.plugin-publish") version "0.14.0" apply false
+    id("com.gradle.plugin-publish") version "0.21.0" apply false
     id("io.gitlab.arturbosch.detekt") version "1.21.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("com.github.ben-manes.versions") version "0.44.0"
