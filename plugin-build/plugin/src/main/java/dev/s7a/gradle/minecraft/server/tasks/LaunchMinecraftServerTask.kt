@@ -8,6 +8,7 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
@@ -44,7 +45,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     private val jarNameOrDefault
         get() = jarName.orElse("server.jar")
 
-    @get:Input
+    @get:InputDirectory
     @get:Optional
     @get:Option(option = "serverDirectory", description = "For storing server data.")
     abstract val serverDirectory: DirectoryProperty
