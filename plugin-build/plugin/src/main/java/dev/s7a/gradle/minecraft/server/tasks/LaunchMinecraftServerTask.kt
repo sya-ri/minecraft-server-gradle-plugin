@@ -14,6 +14,15 @@ import org.gradle.api.tasks.options.Option
 import java.io.File
 import java.net.URL
 
+/**
+ * ```kotlin
+ * task<LaunchMinecraftServerTask>("launchServer") {
+ *     jarUrl.set(JarUrl.Paper("1.19.2"))
+ *     agreeEula.set(true)
+ * }
+ * ```
+ */
+@Suppress("unused")
 abstract class LaunchMinecraftServerTask : DefaultTask() {
     init {
         group = "minecraft"
@@ -138,9 +147,10 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     }
 
     /**
-     * URLからファイルをダウンロードする
-     * @param url ダウンロードURL
-     * @param dest 出力先
+     * Download server jar from [url]
+     *
+     * @param url URL
+     * @param dest Destination
      */
     private fun downloadFile(url: String, dest: File) {
         ant.invokeMethod("get", mapOf("src" to url, "dest" to dest))
