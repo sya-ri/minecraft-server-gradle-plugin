@@ -11,8 +11,6 @@ object PluginBundle {
     const val DESCRIPTION = "Launch Minecraft servers using Gradle task. For Bukkit, Spigot, Paper, etc.."
     const val DISPLAY_NAME = "Launch Minecraft Servers Plugin"
     val TAGS = listOf(
-        "plugin",
-        "gradle",
         "minecraft",
         "bukkit",
         "spigot",
