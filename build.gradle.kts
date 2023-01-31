@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "1.8.0" apply false
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.1.0"
-    id("com.github.ben-manes.versions") version "0.44.0"
+    id("com.github.ben-manes.versions") version "0.45.0"
 }
 
 allprojects {
