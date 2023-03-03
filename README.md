@@ -90,7 +90,7 @@ listOf(
     "16" to "1.16.5",
     "17" to "1.17.1",
     "18" to "1.18.2",
-    "19" to "1.19.2"
+    "19" to "1.19.3"
 ).forEach { (name, version) ->
     task<LaunchMinecraftServerTask>("testPlugin$name") {
         dependsOn("build")
