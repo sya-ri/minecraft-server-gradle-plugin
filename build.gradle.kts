@@ -2,7 +2,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
-    kotlin("jvm") version "1.8.22" apply false
+    kotlin("jvm") version "1.9.0" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.0"
     id("org.jlleitschuh.gradle.ktlint") version "11.5.0"
     id("com.github.ben-manes.versions") version "0.47.0"
