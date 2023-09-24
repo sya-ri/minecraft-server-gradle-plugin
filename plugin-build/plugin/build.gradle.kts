@@ -17,32 +17,17 @@ java {
 }
 
 gradlePlugin {
+    website.set(PluginBundle.WEBSITE)
+    vcsUrl.set(PluginBundle.VCS)
+    description = PluginBundle.DESCRIPTION
     plugins {
         create(PluginCoordinates.ID) {
             id = PluginCoordinates.ID
             implementationClass = PluginCoordinates.IMPLEMENTATION_CLASS
-            version = PluginCoordinates.VERSION
-        }
-    }
-}
-
-// Configuration Block for the Plugin Marker artifact on Plugin Central
-pluginBundle {
-    website = PluginBundle.WEBSITE
-    vcsUrl = PluginBundle.VCS
-    description = PluginBundle.DESCRIPTION
-    tags = PluginBundle.TAGS
-
-    plugins {
-        getByName(PluginCoordinates.ID) {
             displayName = PluginBundle.DISPLAY_NAME
+            version = PluginCoordinates.VERSION
+            tags.set(PluginBundle.TAGS)
         }
-    }
-
-    mavenCoordinates {
-        groupId = PluginCoordinates.GROUP
-        artifactId = PluginCoordinates.ID
-        version = PluginCoordinates.VERSION
     }
 }
 

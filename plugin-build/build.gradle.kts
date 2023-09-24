@@ -1,8 +1,8 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     kotlin("jvm") version "1.9.10" apply false
-    id("com.gradle.plugin-publish") version "0.21.0" apply false
+    id("com.gradle.plugin-publish") version "1.2.1" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.1"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
     id("com.github.ben-manes.versions") version "0.48.0"
@@ -15,7 +15,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        jcenter()
     }
 
     apply {
@@ -38,23 +37,20 @@ allprojects {
 
     detekt {
         config = rootProject.files("../config/detekt/detekt.yml")
-        reports {
-            html {
-                enabled = true
-                destination = file("build/reports/detekt.html")
-            }
-        }
     }
 }
 
-tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-        isNonStable(candidate.version)
+tasks.withType<Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(file("build/reports/detekt.html"))
     }
 }
-
-fun isNonStable(version: String) = "^[0-9,.v-]+(-r)?$".toRegex().matches(version).not()
 
 tasks.register("clean", Delete::class.java) {
     delete(rootProject.buildDir)
+}
+
+tasks.wrapper {
+    distributionType = Wrapper.DistributionType.ALL
 }

@@ -37,14 +37,12 @@ subprojects {
     detekt {
         config = rootProject.files("config/detekt/detekt.yml")
     }
+}
 
-    tasks.withType<Detekt>().configureEach {
-        reports {
-            html {
-                required.set(true)
-                outputLocation.set(file("build/reports/detekt.html"))
-            }
-        }
+tasks.withType<Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(file("build/reports/detekt.html"))
     }
 }
 
@@ -73,4 +71,8 @@ tasks.register("preMerge") {
     dependsOn(":example:check")
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:check"))
     dependsOn(gradle.includedBuild("plugin-build").task(":plugin:validatePlugins"))
+}
+
+tasks.wrapper {
+    distributionType = Wrapper.DistributionType.ALL
 }
