@@ -103,7 +103,7 @@ listOf(
             }
         }
 
-        serverDirectory.set(buildDir.resolve("MinecraftServer$name"))
+        serverDirectory.set(buildDir.resolve("MinecraftServer$name").absolutePath)
         jarUrl.set(JarUrl.Paper(version))
         agreeEula.set(true)
     }

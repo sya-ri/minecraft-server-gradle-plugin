@@ -3,7 +3,6 @@ package dev.s7a.gradle.minecraft.server.tasks
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.gradle.api.DefaultTask
-import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
@@ -46,13 +45,13 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     @get:Input
     @get:Optional
     @get:Option(option = "serverDirectory", description = "For storing server data.")
-    abstract val serverDirectory: DirectoryProperty
+    abstract val serverDirectory: Property<String>
 
     /**
      * @see serverDirectory
      */
     private val serverDirectoryOrDefault
-        get() = serverDirectory.orElse(project.layout.buildDirectory.dir("MinecraftServer"))
+        get() = serverDirectory.orElse(project.layout.buildDirectory.dir("MinecraftServer").get().asFile.absolutePath)
 
     @get:Input
     @get:Optional
@@ -101,7 +100,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     @TaskAction
     fun launchServer() {
         val jarUrl = jarUrl.get()
-        val serverDirectory = serverDirectoryOrDefault.get().asFile.apply(File::mkdirs)
+        val serverDirectory = File(serverDirectoryOrDefault.get()).apply(File::mkdirs)
         val jarName = jarNameOrDefault.get()
         val jarFile = serverDirectory.resolve(jarName)
         val jarVersionFile = serverDirectory.resolve("$jarName.txt")
@@ -116,7 +115,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                     Download Jar $downloadMessage
                         url : $jarUrl
                         dest : ${jarFile.absolutePath}
-                """.trimIndent(),
+                """.trimIndent()
             )
             downloadFile(jarUrl, jarFile)
             jarVersionFile.writeText(jarUrl)
@@ -169,7 +168,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val url: String,
             val maven: String,
             val version: String,
-            val stable: Boolean,
+            val stable: Boolean
         )
 
         @Serializable
@@ -177,7 +176,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val separator: String,
             val maven: String,
             val version: String,
-            val stable: Boolean,
+            val stable: Boolean
         )
 
         /**
@@ -256,8 +255,8 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                         compareBy(
                             { it.version.split(".")[0] },
                             { it.version.split(".")[1] },
-                            { it.version.split(".")[2] },
-                        ),
+                            { it.version.split(".")[2] }
+                        )
                     ).asReversed()[0].version
 
             return "$loaderVersionsUrl/$minecraftVersion/$loaderVersion/$latestInstallerVersion/server/jar"
@@ -282,8 +281,8 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                     compareBy(
                         { it.version.split(it.separator)[0] },
                         { it.version.split(it.separator)[1] },
-                        { it.version.split(it.separator)[2] },
-                    ),
+                        { it.version.split(it.separator)[2] }
+                    )
                 ).asReversed()[0].version
             return Fabric(minecraftVersion, latestLoaderVersion)
         }
