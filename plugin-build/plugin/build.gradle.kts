@@ -19,12 +19,12 @@ java {
 gradlePlugin {
     website.set(PluginBundle.WEBSITE)
     vcsUrl.set(PluginBundle.VCS)
-    description = PluginBundle.DESCRIPTION
     plugins {
         create(PluginCoordinates.ID) {
             id = PluginCoordinates.ID
             implementationClass = PluginCoordinates.IMPLEMENTATION_CLASS
             displayName = PluginBundle.DISPLAY_NAME
+            description = PluginBundle.DESCRIPTION
             version = PluginCoordinates.VERSION
             tags.set(PluginBundle.TAGS)
         }
