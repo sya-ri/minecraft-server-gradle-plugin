@@ -30,6 +30,8 @@ jobs:
         run: ./gradlew preMerge --continue
       - name: Run the plugin
         run: ./gradlew launchMinecraftServer
+      - name: Run the plugin (2)
+        run: ./gradlew launchMinecraftServer
         if: success()
       - name: Stop Gradle
         run: ./gradlew --stop
