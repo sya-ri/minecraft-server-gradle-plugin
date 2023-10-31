@@ -3,7 +3,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     kotlin("jvm") version "1.9.20" apply false
-    id("io.gitlab.arturbosch.detekt") version "1.23.2"
+    id("io.gitlab.arturbosch.detekt") version "1.23.3"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     id("com.github.ben-manes.versions") version "0.49.0"
 }
