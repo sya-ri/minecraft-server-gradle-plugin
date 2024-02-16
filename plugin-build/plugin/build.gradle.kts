@@ -8,7 +8,7 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk7"))
     implementation(gradleApi())
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }
 
 java {
