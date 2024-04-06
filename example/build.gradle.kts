@@ -50,6 +50,21 @@ task<LaunchMinecraftServerTask>("testPluginMohist") {
     agreeEula.set(true)
 }
 
+task<LaunchMinecraftServerTask>("testPluginLocal") {
+    dependsOn("build")
+
+    doFirst {
+        copy {
+            from(buildDir.resolve("libs/${project.name}.jar"))
+            into(buildDir.resolve("MinecraftServerLocal/plugins"))
+        }
+    }
+
+    serverDirectory.set(buildDir.resolve("MinecraftServerLocal").absolutePath)
+    jarUrl.set(JarUrl.LocalFile(buildDir.resolve("MinecraftServer/server.jar"))) // Same as testPlugin
+    agreeEula.set(true)
+}
+
 listOf(
     "8" to "1.8.8",
     "9" to "1.9.4",

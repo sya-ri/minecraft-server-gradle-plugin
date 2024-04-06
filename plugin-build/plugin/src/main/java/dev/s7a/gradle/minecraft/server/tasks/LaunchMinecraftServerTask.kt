@@ -11,6 +11,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.io.File
 import java.net.URL
+import java.nio.file.Path
 
 /**
  * ```kotlin
@@ -151,7 +152,11 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @param dest Destination
      */
     private fun downloadFile(url: String, dest: File) {
-        ant.invokeMethod("get", mapOf("src" to url, "dest" to dest))
+        when (val protocol = url.substringBefore("://")) {
+            "http", "https" -> ant.invokeMethod("get", mapOf("src" to url, "dest" to dest))
+            "file" -> File(url.substring("file://".length)).copyTo(dest)
+            else -> throw RuntimeException("Unsupported protocol: $protocol")
+        }
     }
 
     /**
@@ -333,6 +338,36 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                 }
             } ?: throw RuntimeException("Not found build (version: $version, forgeVersion: $forgeVersion)")
             return build.originUrl
+        }
+
+        /**
+         * Using local file as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.LocalFile(projectDir.resolve("server.jar")))
+         * ```
+         *
+         * @param path file path
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun LocalFile(path: Path): String {
+            return "file://${path.toAbsolutePath()}"
+        }
+
+        /**
+         * Using local file as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.LocalFile(projectDir.resolve("server.jar")))
+         * ```
+         *
+         * @param file file
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun LocalFile(file: File): String {
+            return LocalFile(file.toPath())
         }
     }
 }
