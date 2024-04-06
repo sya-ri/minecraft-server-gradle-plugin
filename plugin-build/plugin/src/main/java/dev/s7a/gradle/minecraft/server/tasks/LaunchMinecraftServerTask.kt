@@ -179,6 +179,24 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val stable: Boolean
         )
 
+        @Serializable
+        private data class MohistBuilds(
+            val projectName: String,
+            val projectVersion: String,
+            val builds: List<Build>
+        ) {
+            @Serializable
+            data class Build(
+                val number: Int,
+                val gitSha: String,
+                val forgeVersion: String,
+                val fileMd5: String,
+                val originUrl: String,
+                val url: String,
+                val createdAt: Long
+            )
+        }
+
         /**
          * Using [Paper](https://papermc.io) as [jarUrl].
          *
@@ -285,6 +303,36 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                     )
                 ).asReversed()[0].version
             return Fabric(minecraftVersion, latestLoaderVersion)
+        }
+
+        /**
+         * Using [Mohist](https://mohistmc.com/software/mohist) as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Mohist("1.20.1"))
+         *
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Mohist("1.20.1", forgeVersion = "47.2.23"))
+         * ```
+         *
+         * @param version [Mohist version](https://mohistmc.com/api/v2/projects/mohist)
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun Mohist(version: String, forgeVersion: String? = null): String {
+            val buildsJson = URL("https://mohistmc.com/api/v2/projects/mohist/$version/builds").readText()
+            val predicates = buildList<(MohistBuilds.Build) -> Boolean> {
+                if (forgeVersion != null) {
+                    add {
+                        it.forgeVersion == forgeVersion
+                    }
+                }
+            }
+            val build = json.decodeFromString<MohistBuilds>(buildsJson).builds.lastOrNull {
+                predicates.all { predicate ->
+                    predicate.invoke(it)
+                }
+            } ?: throw RuntimeException("Not found build (version: $version, forgeVersion: $forgeVersion)")
+            return build.originUrl
         }
     }
 }
