@@ -1,5 +1,7 @@
 package dev.s7a.gradle.minecraft.server.tasks
 
+import dev.s7a.gradle.minecraft.server.exception.NotFoundMohistBuildException
+import dev.s7a.gradle.minecraft.server.exception.UnsupportedProtocolException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.gradle.api.DefaultTask
@@ -155,7 +157,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
         when (val protocol = url.substringBefore("://")) {
             "http", "https" -> ant.invokeMethod("get", mapOf("src" to url, "dest" to dest))
             "file" -> File(url.substring("file://".length)).copyTo(dest)
-            else -> throw RuntimeException("Unsupported protocol: $protocol")
+            else -> throw UnsupportedProtocolException(protocol)
         }
     }
 
@@ -336,7 +338,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                 predicates.all { predicate ->
                     predicate.invoke(it)
                 }
-            } ?: throw RuntimeException("Not found build (version: $version, forgeVersion: $forgeVersion)")
+            } ?: throw NotFoundMohistBuildException(version, forgeVersion)
             return build.originUrl
         }
 
