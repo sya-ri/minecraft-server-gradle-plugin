@@ -39,7 +39,7 @@ plugins {
 
 ## Example
 
-> **Warning**
+> [!WARNING]
 > This plugin doesn't have a default task. So you have to define it yourself.
 
 ### Simple usage
