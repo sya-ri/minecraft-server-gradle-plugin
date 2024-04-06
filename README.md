@@ -13,7 +13,7 @@ Launch Minecraft servers using Gradle task. For Bukkit, Spigot, Paper, etc..
 
 ```groovy
 plugins {
-    id 'dev.s7a.gradle.minecraft.server' version '3.0.0'
+    id 'dev.s7a.gradle.minecraft.server' version '3.1.0'
 }
 ```
 
@@ -21,7 +21,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("dev.s7a.gradle.minecraft.server") version "3.0.0"
+    id("dev.s7a.gradle.minecraft.server") version "3.1.0"
 }
 ```
 
@@ -109,3 +109,12 @@ listOf(
     }
 }
 ```
+
+## Supported `JarUrl`
+
+- Paper
+- Velocity
+- Waterfall
+- Fabric
+- Mohist
+- LocalFile
