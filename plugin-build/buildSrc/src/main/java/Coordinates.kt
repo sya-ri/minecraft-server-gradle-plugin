@@ -10,10 +10,11 @@ object PluginBundle {
     const val WEBSITE = "https://github.com/sya-ri/minecraft-server-gradle-plugin"
     const val DESCRIPTION = "Launch Minecraft servers using Gradle task. For Bukkit, Spigot, Paper, etc.."
     const val DISPLAY_NAME = "Launch Minecraft Servers Plugin"
-    val TAGS = listOf(
-        "minecraft",
-        "bukkit",
-        "spigot",
-        "paper"
-    )
+    val TAGS =
+        listOf(
+            "minecraft",
+            "bukkit",
+            "spigot",
+            "paper",
+        )
 }

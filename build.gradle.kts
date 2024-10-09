@@ -4,7 +4,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 plugins {
     kotlin("jvm") version "2.0.20" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.7"
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
+    id("org.jmailen.kotlinter") version "4.4.1"
     id("com.github.ben-manes.versions") version "0.51.0"
 }
 
@@ -18,20 +18,7 @@ allprojects {
 subprojects {
     apply {
         plugin("io.gitlab.arturbosch.detekt")
-        plugin("org.jlleitschuh.gradle.ktlint")
-    }
-
-    ktlint {
-        debug.set(false)
-        verbose.set(true)
-        android.set(false)
-        outputToConsole.set(true)
-        ignoreFailures.set(false)
-        enableExperimentalRules.set(true)
-        filter {
-            exclude("**/generated/**")
-            include("**/kotlin/**")
-        }
+        plugin("org.jmailen.kotlinter")
     }
 
     detekt {
@@ -61,8 +48,8 @@ tasks.register("clean", Delete::class.java) {
 tasks.register("reformatAll") {
     description = "Reformat all the Kotlin Code"
 
-    dependsOn("ktlintFormat")
-    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:ktlintFormat"))
+    dependsOn("formatKotlin")
+    dependsOn(gradle.includedBuild("plugin-build").task(":plugin:formatKotlin"))
 }
 
 tasks.register("preMerge") {

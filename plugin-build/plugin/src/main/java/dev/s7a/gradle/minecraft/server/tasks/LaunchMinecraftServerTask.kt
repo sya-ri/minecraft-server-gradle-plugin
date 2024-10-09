@@ -1,6 +1,7 @@
 package dev.s7a.gradle.minecraft.server.tasks
 
 import dev.s7a.gradle.minecraft.server.exception.NotFoundMohistBuildException
+import dev.s7a.gradle.minecraft.server.exception.NotFoundVersionException
 import dev.s7a.gradle.minecraft.server.exception.UnsupportedProtocolException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -12,6 +13,7 @@ import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import java.io.File
+import java.io.FileNotFoundException
 import java.net.URL
 import java.nio.file.Path
 
@@ -54,7 +56,13 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @see serverDirectory
      */
     private val serverDirectoryOrDefault
-        get() = serverDirectory.orElse(project.layout.buildDirectory.dir("MinecraftServer").get().asFile.absolutePath)
+        get() =
+            serverDirectory.orElse(
+                project.layout.buildDirectory
+                    .dir("MinecraftServer")
+                    .get()
+                    .asFile.absolutePath,
+            )
 
     @get:Input
     @get:Optional
@@ -107,18 +115,19 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
         val jarName = jarNameOrDefault.get()
         val jarFile = serverDirectory.resolve(jarName)
         val jarVersionFile = serverDirectory.resolve("$jarName.txt")
-        val downloadMessage = when {
-            jarFile.exists().not() -> ""
-            jarVersionFile.exists().not() || jarVersionFile.readText() != jarUrl -> "(Auto-Refresh)"
-            else -> null
-        }
+        val downloadMessage =
+            when {
+                jarFile.exists().not() -> ""
+                jarVersionFile.exists().not() || jarVersionFile.readText() != jarUrl -> "(Auto-Refresh)"
+                else -> null
+            }
         if (downloadMessage != null) {
             logger.lifecycle(
                 """
-                    Download Jar $downloadMessage
-                        url : $jarUrl
-                        dest : ${jarFile.absolutePath}
-                """.trimIndent()
+                Download Jar $downloadMessage
+                    url : $jarUrl
+                    dest : ${jarFile.absolutePath}
+                """.trimIndent(),
             )
             downloadFile(jarUrl, jarFile)
             jarVersionFile.writeText(jarUrl)
@@ -153,7 +162,10 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
      * @param url URL
      * @param dest Destination
      */
-    private fun downloadFile(url: String, dest: File) {
+    private fun downloadFile(
+        url: String,
+        dest: File,
+    ) {
         when (val protocol = url.substringBefore("://")) {
             "http", "https" -> ant.invokeMethod("get", mapOf("src" to url, "dest" to dest))
             "file" -> File(url.substring("file://".length)).copyTo(dest)
@@ -182,7 +194,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val url: String,
             val maven: String,
             val version: String,
-            val stable: Boolean
+            val stable: Boolean,
         )
 
         @Serializable
@@ -190,14 +202,14 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val separator: String,
             val maven: String,
             val version: String,
-            val stable: Boolean
+            val stable: Boolean,
         )
 
         @Serializable
         private data class MohistBuilds(
             val projectName: String,
             val projectVersion: String,
-            val builds: List<Build>
+            val builds: List<Build>,
         ) {
             @Serializable
             data class Build(
@@ -207,7 +219,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                 val fileMd5: String,
                 val originUrl: String,
                 val url: String,
-                val createdAt: Long
+                val createdAt: Long,
             )
         }
 
@@ -266,13 +278,9 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * @return URL
          */
         @Suppress("FunctionName")
-        @Deprecated("This project has reached end of life and is no longer maintained. For more information, see the official announcement.")
-        fun Waterfall(version: String): String {
-            val versionsUrl = "https://papermc.io/api/v2/projects/waterfall/versions"
-            val versionsJson = URL("$versionsUrl/$version").readText()
-            val build = json.decodeFromString<Version>(versionsJson).builds.maxOrNull()
-            return "$versionsUrl/$version/builds/$build/downloads/waterfall-$version-$build.jar"
-        }
+        @Deprecated(
+            "This project has reached end of life and is no longer maintained. For more information, see the official announcement.",
+        )
         fun Waterfall(version: String): String = FromPaperProject("waterfall", version)
 
         /**
@@ -287,19 +295,25 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * @return URL
          */
         @Suppress("FunctionName")
-        fun Fabric(minecraftVersion: String, loaderVersion: String): String {
+        fun Fabric(
+            minecraftVersion: String,
+            loaderVersion: String,
+        ): String {
             val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
             val installerVersionsUrl = "https://meta.fabricmc.net/v2/versions/installer"
             val installerVersionsJson = URL(installerVersionsUrl).readText()
             val latestInstallerVersion =
-                json.decodeFromString<List<FabricInstallerVersion>>(installerVersionsJson).filter { it.stable }
+                json
+                    .decodeFromString<List<FabricInstallerVersion>>(installerVersionsJson)
+                    .filter { it.stable }
                     .sortedWith(
                         compareBy(
                             { it.version.split(".")[0] },
                             { it.version.split(".")[1] },
-                            { it.version.split(".")[2] }
-                        )
-                    ).asReversed()[0].version
+                            { it.version.split(".")[2] },
+                        ),
+                    ).asReversed()[0]
+                    .version
 
             return "$loaderVersionsUrl/$minecraftVersion/$loaderVersion/$latestInstallerVersion/server/jar"
         }
@@ -319,13 +333,17 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
             val loaderVersionsJson = URL(loaderVersionsUrl).readText()
             val latestLoaderVersion =
-                json.decodeFromString<List<FabricLoaderVersion>>(loaderVersionsJson).filter { it.stable }.sortedWith(
-                    compareBy(
-                        { it.version.split(it.separator)[0] },
-                        { it.version.split(it.separator)[1] },
-                        { it.version.split(it.separator)[2] }
-                    )
-                ).asReversed()[0].version
+                json
+                    .decodeFromString<List<FabricLoaderVersion>>(loaderVersionsJson)
+                    .filter { it.stable }
+                    .sortedWith(
+                        compareBy(
+                            { it.version.split(it.separator)[0] },
+                            { it.version.split(it.separator)[1] },
+                            { it.version.split(it.separator)[2] },
+                        ),
+                    ).asReversed()[0]
+                    .version
             return Fabric(minecraftVersion, latestLoaderVersion)
         }
 
@@ -342,20 +360,25 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * @return URL
          */
         @Suppress("FunctionName")
-        fun Mohist(version: String, forgeVersion: String? = null): String {
+        fun Mohist(
+            version: String,
+            forgeVersion: String? = null,
+        ): String {
             val buildsJson = URL("https://mohistmc.com/api/v2/projects/mohist/$version/builds").readText()
-            val predicates = buildList<(MohistBuilds.Build) -> Boolean> {
-                if (forgeVersion != null) {
-                    add {
-                        it.forgeVersion == forgeVersion
+            val predicates =
+                buildList<(MohistBuilds.Build) -> Boolean> {
+                    if (forgeVersion != null) {
+                        add {
+                            it.forgeVersion == forgeVersion
+                        }
                     }
                 }
-            }
-            val build = json.decodeFromString<MohistBuilds>(buildsJson).builds.lastOrNull {
-                predicates.all { predicate ->
-                    predicate.invoke(it)
-                }
-            } ?: throw NotFoundMohistBuildException(version, forgeVersion)
+            val build =
+                json.decodeFromString<MohistBuilds>(buildsJson).builds.lastOrNull {
+                    predicates.all { predicate ->
+                        predicate.invoke(it)
+                    }
+                } ?: throw NotFoundMohistBuildException(version, forgeVersion)
             return build.originUrl
         }
 
@@ -370,9 +393,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * @return URL
          */
         @Suppress("FunctionName")
-        fun LocalFile(path: Path): String {
-            return "file://${path.toAbsolutePath()}"
-        }
+        fun LocalFile(path: Path): String = "file://${path.toAbsolutePath()}"
 
         /**
          * Using local file as [jarUrl].
@@ -385,8 +406,6 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * @return URL
          */
         @Suppress("FunctionName")
-        fun LocalFile(file: File): String {
-            return LocalFile(file.toPath())
-        }
+        fun LocalFile(file: File): String = LocalFile(file.toPath())
     }
 }
