@@ -255,6 +255,19 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
         fun Paper(version: String): String = FromPaperProject("paper", version)
 
         /**
+         * Using [Folia](https://papermc.io) as [jarUrl].
+         *
+         * ```
+         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Folia("1.20.4"))
+         * ```
+         *
+         * @param version [Folia version](https://papermc.io/api/v2/projects/folia)
+         * @return URL
+         */
+        @Suppress("FunctionName")
+        fun Folia(version: String): String = FromPaperProject("folia", version)
+
+        /**
          * Using [Velocity](https://papermc.io) as [jarUrl].
          *
          * ```
