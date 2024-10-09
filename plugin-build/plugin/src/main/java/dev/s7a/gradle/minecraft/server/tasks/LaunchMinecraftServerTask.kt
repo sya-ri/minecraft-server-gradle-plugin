@@ -251,6 +251,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * @return URL
          */
         @Suppress("FunctionName")
+        @Deprecated("This project has reached end of life and is no longer maintained. For more information, see the official announcement.")
         fun Waterfall(version: String): String {
             val versionsUrl = "https://papermc.io/api/v2/projects/waterfall/versions"
             val versionsJson = URL("$versionsUrl/$version").readText()
