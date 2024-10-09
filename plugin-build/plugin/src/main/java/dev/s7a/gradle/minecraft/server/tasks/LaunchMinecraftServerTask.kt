@@ -233,7 +233,9 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             val versionsJson =
                 try {
                     URL(versionUrl).readText()
-                } catch (err: FileNotFoundException) {
+                } catch (
+                    @Suppress("SwallowedException") err: FileNotFoundException,
+                ) {
                     val versions = json.decodeFromString<PaperProject>(URL(projectUrl).readText()).versions
                     throw NotFoundVersionException(version, versions)
                 }
@@ -291,9 +293,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * @return URL
          */
         @Suppress("FunctionName")
-        @Deprecated(
-            "This project has reached end of life and is no longer maintained. For more information, see the official announcement.",
-        )
+        @Deprecated("No longer maintained. For more information, see the official announcement.")
         fun Waterfall(version: String): String = FromPaperProject("waterfall", version)
 
         /**
