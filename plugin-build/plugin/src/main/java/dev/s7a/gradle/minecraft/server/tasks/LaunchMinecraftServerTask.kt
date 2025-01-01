@@ -228,7 +228,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             projectName: String,
             version: String,
         ): String {
-            val projectUrl = "https://papermc.io/api/v2/projects/$projectName"
+            val projectUrl = "https://api.papermc.io/v2/projects/$projectName"
             val versionUrl = "$projectUrl/versions/$version"
             val versionsJson =
                 try {
@@ -250,7 +250,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.17.1"))
          * ```
          *
-         * @param version [Paper version](https://papermc.io/api/v2/projects/paper)
+         * @param version [Paper version](https://api.papermc.io/v2/projects/paper)
          * @return URL
          */
         @Suppress("FunctionName")
@@ -263,7 +263,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Folia("1.20.4"))
          * ```
          *
-         * @param version [Folia version](https://papermc.io/api/v2/projects/folia)
+         * @param version [Folia version](https://api.papermc.io/v2/projects/folia)
          * @return URL
          */
         @Suppress("FunctionName")
@@ -276,7 +276,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Velocity("3.1.2-SNAPSHOT"))
          * ```
          *
-         * @param version [Velocity version](https://papermc.io/api/v2/projects/velocity).
+         * @param version [Velocity version](https://api.papermc.io/v2/projects/velocity).
          * @return URL
          */
         @Suppress("FunctionName")
@@ -289,7 +289,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
          * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Waterfall("1.19"))
          * ```
          *
-         * @param version [Waterfall version](https://papermc.io/api/v2/projects/waterfall).
+         * @param version [Waterfall version](https://api.papermc.io/v2/projects/waterfall).
          * @return URL
          */
         @Suppress("FunctionName")
