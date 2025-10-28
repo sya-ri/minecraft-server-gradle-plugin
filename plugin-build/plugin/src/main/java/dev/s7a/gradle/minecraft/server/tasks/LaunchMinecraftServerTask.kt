@@ -252,7 +252,8 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                         } catch (
                             @Suppress("SwallowedException") err: FileNotFoundException,
                         ) {
-                            val versions = json.decodeFromString<PaperProject>(URL(projectUrl).readText()).versions.flatMap { it.value }
+                            val project = json.decodeFromString<PaperProject>(URL(projectUrl).readText())
+                            val versions = project.versions.flatMap { it.value }
                             throw NotFoundVersionException(version, versions)
                         }
                     val buildNumber = json.decodeFromString<PaperProjectVersion>(versionsJson).builds.maxOrNull()
