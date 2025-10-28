@@ -1,6 +1,7 @@
 package dev.s7a.gradle.minecraft.server.tasks
 
 import dev.s7a.gradle.minecraft.server.exception.NotFoundMohistBuildException
+import dev.s7a.gradle.minecraft.server.exception.NotFoundPaperBuildException
 import dev.s7a.gradle.minecraft.server.exception.NotFoundVersionException
 import dev.s7a.gradle.minecraft.server.exception.UnsupportedProtocolException
 import kotlinx.serialization.Serializable
@@ -12,7 +13,6 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
-import org.gradle.jvm.tasks.Jar
 import java.io.File
 import java.io.FileNotFoundException
 import java.net.URL
@@ -185,13 +185,23 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
 
             @Serializable
             private data class PaperProject(
-                val versions: List<String>,
+                val versions: Map<String, List<String>>,
             )
 
             @Serializable
             private data class PaperProjectVersion(
                 val builds: List<Int>,
             )
+
+            @Serializable
+            private data class PaperProjectBuild(
+                val downloads: Map<String, Download>,
+            ) {
+                @Serializable
+                data class Download(
+                    val url: String,
+                )
+            }
 
             @Serializable
             private data class FabricInstallerVersion(
@@ -231,9 +241,10 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
             private fun FromPaperProject(
                 projectName: String,
                 version: String,
+                type: String,
             ): JarUrl =
                 JarUrl {
-                    val projectUrl = "https://api.papermc.io/v2/projects/$projectName"
+                    val projectUrl = "https://fill.papermc.io/v3/projects/$projectName"
                     val versionUrl = "$projectUrl/versions/$version"
                     val versionsJson =
                         try {
@@ -241,11 +252,13 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
                         } catch (
                             @Suppress("SwallowedException") err: FileNotFoundException,
                         ) {
-                            val versions = json.decodeFromString<PaperProject>(URL(projectUrl).readText()).versions
+                            val versions = json.decodeFromString<PaperProject>(URL(projectUrl).readText()).versions.flatMap { it.value }
                             throw NotFoundVersionException(version, versions)
                         }
-                    val build = json.decodeFromString<PaperProjectVersion>(versionsJson).builds.maxOrNull()
-                    "$versionUrl/builds/$build/downloads/$projectName-$version-$build.jar"
+                    val buildNumber = json.decodeFromString<PaperProjectVersion>(versionsJson).builds.maxOrNull()
+                    val buildUrl = "$versionUrl/builds/$buildNumber"
+                    val build = json.decodeFromString<PaperProjectBuild>(URL(buildUrl).readText())
+                    build.downloads[type]?.url ?: throw NotFoundPaperBuildException(version, type)
                 }
 
             /**
@@ -259,7 +272,10 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
              * @return URL
              */
             @Suppress("FunctionName")
-            fun Paper(version: String): JarUrl = FromPaperProject("paper", version)
+            fun Paper(
+                version: String,
+                type: String = "server:default",
+            ): JarUrl = FromPaperProject("paper", version, type)
 
             /**
              * Using [Folia](https://papermc.io) as [jarUrl].
@@ -272,7 +288,10 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
              * @return URL
              */
             @Suppress("FunctionName")
-            fun Folia(version: String): JarUrl = FromPaperProject("folia", version)
+            fun Folia(
+                version: String,
+                type: String = "server:default",
+            ): JarUrl = FromPaperProject("folia", version, type)
 
             /**
              * Using [Velocity](https://papermc.io) as [jarUrl].
@@ -285,7 +304,10 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
              * @return URL
              */
             @Suppress("FunctionName")
-            fun Velocity(version: String): JarUrl = FromPaperProject("velocity", version)
+            fun Velocity(
+                version: String,
+                type: String = "server:default",
+            ): JarUrl = FromPaperProject("velocity", version, type)
 
             /**
              * Using [Waterfall](https://papermc.io) as [jarUrl].
@@ -299,7 +321,10 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
              */
             @Suppress("FunctionName")
             @Deprecated("No longer maintained. For more information, see the official announcement.")
-            fun Waterfall(version: String): JarUrl = FromPaperProject("waterfall", version)
+            fun Waterfall(
+                version: String,
+                type: String = "server:default",
+            ): JarUrl = FromPaperProject("waterfall", version, type)
 
             /**
              * Using [Fabric](https://fabricmc.net) as [jarUrl].
