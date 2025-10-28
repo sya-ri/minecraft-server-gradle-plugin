@@ -8,7 +8,7 @@ plugins {
 
 repositories {
     maven(url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven(url = "https://oss.sonatype.org/content/groups/public/")
+    maven(url = "https://maven.elmakers.com/repository") // For net.md-5:bungeecord-chat:1.8-SNAPSHOT
 }
 
 dependencies {

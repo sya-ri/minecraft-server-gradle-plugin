@@ -12,6 +12,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
+import org.gradle.jvm.tasks.Jar
 import java.io.File
 import java.io.FileNotFoundException
 import java.net.URL
@@ -34,7 +35,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
 
     @get:Input
     @get:Option(option = "jarUrl", description = "To download the server jar.")
-    abstract val jarUrl: Property<String>
+    abstract val jarUrl: Property<JarUrl>
 
     @get:Input
     @get:Optional
@@ -110,7 +111,7 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
 
     @TaskAction
     fun launchServer() {
-        val jarUrl = jarUrl.get()
+        val jarUrl = jarUrl.get().get()
         val serverDirectory = File(serverDirectoryOrDefault.get()).apply(File::mkdirs)
         val jarName = jarNameOrDefault.get()
         val jarFile = serverDirectory.resolve(jarName)
@@ -176,249 +177,260 @@ abstract class LaunchMinecraftServerTask : DefaultTask() {
     /**
      * @see jarUrl
      */
-    object JarUrl {
-        private val json = Json { ignoreUnknownKeys = true }
+    fun interface JarUrl {
+        fun get(): String
 
-        @Serializable
-        private data class PaperProject(
-            val versions: List<String>,
-        )
+        companion object {
+            private val json = Json { ignoreUnknownKeys = true }
 
-        @Serializable
-        private data class PaperProjectVersion(
-            val builds: List<Int>,
-        )
-
-        @Serializable
-        private data class FabricInstallerVersion(
-            val url: String,
-            val maven: String,
-            val version: String,
-            val stable: Boolean,
-        )
-
-        @Serializable
-        private data class FabricLoaderVersion(
-            val separator: String,
-            val maven: String,
-            val version: String,
-            val stable: Boolean,
-        )
-
-        @Serializable
-        private data class MohistBuilds(
-            val projectName: String,
-            val projectVersion: String,
-            val builds: List<Build>,
-        ) {
             @Serializable
-            data class Build(
-                val number: Int,
-                val gitSha: String,
-                val forgeVersion: String,
-                val fileMd5: String,
-                val originUrl: String,
-                val url: String,
-                val createdAt: Long,
+            private data class PaperProject(
+                val versions: List<String>,
             )
-        }
 
-        @Suppress("FunctionName")
-        private fun FromPaperProject(
-            projectName: String,
-            version: String,
-        ): String {
-            val projectUrl = "https://api.papermc.io/v2/projects/$projectName"
-            val versionUrl = "$projectUrl/versions/$version"
-            val versionsJson =
-                try {
-                    URL(versionUrl).readText()
-                } catch (
-                    @Suppress("SwallowedException") err: FileNotFoundException,
-                ) {
-                    val versions = json.decodeFromString<PaperProject>(URL(projectUrl).readText()).versions
-                    throw NotFoundVersionException(version, versions)
-                }
-            val build = json.decodeFromString<PaperProjectVersion>(versionsJson).builds.maxOrNull()
-            return "$versionUrl/builds/$build/downloads/$projectName-$version-$build.jar"
-        }
+            @Serializable
+            private data class PaperProjectVersion(
+                val builds: List<Int>,
+            )
 
-        /**
-         * Using [Paper](https://papermc.io) as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.17.1"))
-         * ```
-         *
-         * @param version [Paper version](https://api.papermc.io/v2/projects/paper)
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun Paper(version: String): String = FromPaperProject("paper", version)
+            @Serializable
+            private data class FabricInstallerVersion(
+                val url: String,
+                val maven: String,
+                val version: String,
+                val stable: Boolean,
+            )
 
-        /**
-         * Using [Folia](https://papermc.io) as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Folia("1.20.4"))
-         * ```
-         *
-         * @param version [Folia version](https://api.papermc.io/v2/projects/folia)
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun Folia(version: String): String = FromPaperProject("folia", version)
+            @Serializable
+            private data class FabricLoaderVersion(
+                val separator: String,
+                val maven: String,
+                val version: String,
+                val stable: Boolean,
+            )
 
-        /**
-         * Using [Velocity](https://papermc.io) as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Velocity("3.1.2-SNAPSHOT"))
-         * ```
-         *
-         * @param version [Velocity version](https://api.papermc.io/v2/projects/velocity).
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun Velocity(version: String): String = FromPaperProject("velocity", version)
+            @Serializable
+            private data class MohistBuilds(
+                val projectName: String,
+                val projectVersion: String,
+                val builds: List<Build>,
+            ) {
+                @Serializable
+                data class Build(
+                    val number: Int,
+                    val gitSha: String,
+                    val forgeVersion: String,
+                    val fileMd5: String,
+                    val originUrl: String,
+                    val url: String,
+                    val createdAt: Long,
+                )
+            }
 
-        /**
-         * Using [Waterfall](https://papermc.io) as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Waterfall("1.19"))
-         * ```
-         *
-         * @param version [Waterfall version](https://api.papermc.io/v2/projects/waterfall).
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        @Deprecated("No longer maintained. For more information, see the official announcement.")
-        fun Waterfall(version: String): String = FromPaperProject("waterfall", version)
-
-        /**
-         * Using [Fabric](https://fabricmc.net) as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Fabric("1.19.2", "0.14.11"))
-         * ```
-         *
-         * @param minecraftVersion [Minecraft version](https://meta.fabricmc.net/v2/versions/game).
-         * @param loaderVersion [Fabric Loader version](https://meta.fabricmc.net/v2/versions/loader)
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun Fabric(
-            minecraftVersion: String,
-            loaderVersion: String,
-        ): String {
-            val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
-            val installerVersionsUrl = "https://meta.fabricmc.net/v2/versions/installer"
-            val installerVersionsJson = URL(installerVersionsUrl).readText()
-            val latestInstallerVersion =
-                json
-                    .decodeFromString<List<FabricInstallerVersion>>(installerVersionsJson)
-                    .filter { it.stable }
-                    .sortedWith(
-                        compareBy(
-                            { it.version.split(".")[0] },
-                            { it.version.split(".")[1] },
-                            { it.version.split(".")[2] },
-                        ),
-                    ).asReversed()[0]
-                    .version
-
-            return "$loaderVersionsUrl/$minecraftVersion/$loaderVersion/$latestInstallerVersion/server/jar"
-        }
-
-        /**
-         * Using [Fabric](https://fabricmc.net) as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Fabric("1.19.2"))
-         * ```
-         *
-         * @param minecraftVersion [Minecraft version](https://meta.fabricmc.net/v2/versions/game).
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun Fabric(minecraftVersion: String): String {
-            val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
-            val loaderVersionsJson = URL(loaderVersionsUrl).readText()
-            val latestLoaderVersion =
-                json
-                    .decodeFromString<List<FabricLoaderVersion>>(loaderVersionsJson)
-                    .filter { it.stable }
-                    .sortedWith(
-                        compareBy(
-                            { it.version.split(it.separator)[0] },
-                            { it.version.split(it.separator)[1] },
-                            { it.version.split(it.separator)[2] },
-                        ),
-                    ).asReversed()[0]
-                    .version
-            return Fabric(minecraftVersion, latestLoaderVersion)
-        }
-
-        /**
-         * Using [Mohist](https://mohistmc.com/software/mohist) as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Mohist("1.20.1"))
-         *
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Mohist("1.20.1", forgeVersion = "47.2.23"))
-         * ```
-         *
-         * @param version [Mohist version](https://mohistmc.com/api/v2/projects/mohist)
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun Mohist(
-            version: String,
-            forgeVersion: String? = null,
-        ): String {
-            val buildsJson = URL("https://mohistmc.com/api/v2/projects/mohist/$version/builds").readText()
-            val predicates =
-                buildList<(MohistBuilds.Build) -> Boolean> {
-                    if (forgeVersion != null) {
-                        add {
-                            it.forgeVersion == forgeVersion
+            @Suppress("FunctionName")
+            private fun FromPaperProject(
+                projectName: String,
+                version: String,
+            ): JarUrl =
+                JarUrl {
+                    val projectUrl = "https://api.papermc.io/v2/projects/$projectName"
+                    val versionUrl = "$projectUrl/versions/$version"
+                    val versionsJson =
+                        try {
+                            URL(versionUrl).readText()
+                        } catch (
+                            @Suppress("SwallowedException") err: FileNotFoundException,
+                        ) {
+                            val versions = json.decodeFromString<PaperProject>(URL(projectUrl).readText()).versions
+                            throw NotFoundVersionException(version, versions)
                         }
-                    }
+                    val build = json.decodeFromString<PaperProjectVersion>(versionsJson).builds.maxOrNull()
+                    "$versionUrl/builds/$build/downloads/$projectName-$version-$build.jar"
                 }
-            val build =
-                json.decodeFromString<MohistBuilds>(buildsJson).builds.lastOrNull {
-                    predicates.all { predicate ->
-                        predicate.invoke(it)
-                    }
-                } ?: throw NotFoundMohistBuildException(version, forgeVersion)
-            return build.originUrl
+
+            /**
+             * Using [Paper](https://papermc.io) as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Paper("1.17.1"))
+             * ```
+             *
+             * @param version [Paper version](https://api.papermc.io/v2/projects/paper)
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun Paper(version: String): JarUrl = FromPaperProject("paper", version)
+
+            /**
+             * Using [Folia](https://papermc.io) as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Folia("1.20.4"))
+             * ```
+             *
+             * @param version [Folia version](https://api.papermc.io/v2/projects/folia)
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun Folia(version: String): JarUrl = FromPaperProject("folia", version)
+
+            /**
+             * Using [Velocity](https://papermc.io) as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Velocity("3.1.2-SNAPSHOT"))
+             * ```
+             *
+             * @param version [Velocity version](https://api.papermc.io/v2/projects/velocity).
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun Velocity(version: String): JarUrl = FromPaperProject("velocity", version)
+
+            /**
+             * Using [Waterfall](https://papermc.io) as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Waterfall("1.19"))
+             * ```
+             *
+             * @param version [Waterfall version](https://api.papermc.io/v2/projects/waterfall).
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            @Deprecated("No longer maintained. For more information, see the official announcement.")
+            fun Waterfall(version: String): JarUrl = FromPaperProject("waterfall", version)
+
+            /**
+             * Using [Fabric](https://fabricmc.net) as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Fabric("1.19.2", "0.14.11"))
+             * ```
+             *
+             * @param minecraftVersion [Minecraft version](https://meta.fabricmc.net/v2/versions/game).
+             * @param loaderVersion [Fabric Loader version](https://meta.fabricmc.net/v2/versions/loader)
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun Fabric(
+                minecraftVersion: String,
+                loaderVersion: String,
+            ): JarUrl =
+                JarUrl {
+                    val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
+                    val installerVersionsUrl = "https://meta.fabricmc.net/v2/versions/installer"
+                    val installerVersionsJson = URL(installerVersionsUrl).readText()
+                    val latestInstallerVersion =
+                        json
+                            .decodeFromString<List<FabricInstallerVersion>>(installerVersionsJson)
+                            .filter { it.stable }
+                            .sortedWith(
+                                compareBy(
+                                    { it.version.split(".")[0] },
+                                    { it.version.split(".")[1] },
+                                    { it.version.split(".")[2] },
+                                ),
+                            ).asReversed()[0]
+                            .version
+
+                    "$loaderVersionsUrl/$minecraftVersion/$loaderVersion/$latestInstallerVersion/server/jar"
+                }
+
+            /**
+             * Using [Fabric](https://fabricmc.net) as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Fabric("1.19.2"))
+             * ```
+             *
+             * @param minecraftVersion [Minecraft version](https://meta.fabricmc.net/v2/versions/game).
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun Fabric(minecraftVersion: String): JarUrl =
+                JarUrl {
+                    val loaderVersionsUrl = "https://meta.fabricmc.net/v2/versions/loader"
+                    val loaderVersionsJson = URL(loaderVersionsUrl).readText()
+                    val latestLoaderVersion =
+                        json
+                            .decodeFromString<List<FabricLoaderVersion>>(loaderVersionsJson)
+                            .filter { it.stable }
+                            .sortedWith(
+                                compareBy(
+                                    { it.version.split(it.separator)[0] },
+                                    { it.version.split(it.separator)[1] },
+                                    { it.version.split(it.separator)[2] },
+                                ),
+                            ).asReversed()[0]
+                            .version
+                    Fabric(minecraftVersion, latestLoaderVersion).get()
+                }
+
+            /**
+             * Using [Mohist](https://mohistmc.com/software/mohist) as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Mohist("1.20.1"))
+             *
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.Mohist("1.20.1", forgeVersion = "47.2.23"))
+             * ```
+             *
+             * @param version [Mohist version](https://mohistmc.com/api/v2/projects/mohist)
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun Mohist(
+                version: String,
+                forgeVersion: String? = null,
+            ): JarUrl =
+                JarUrl {
+                    val buildsJson = URL("https://mohistmc.com/api/v2/projects/mohist/$version/builds").readText()
+                    val predicates =
+                        buildList<(MohistBuilds.Build) -> Boolean> {
+                            if (forgeVersion != null) {
+                                add {
+                                    it.forgeVersion == forgeVersion
+                                }
+                            }
+                        }
+                    val build =
+                        json.decodeFromString<MohistBuilds>(buildsJson).builds.lastOrNull {
+                            predicates.all { predicate ->
+                                predicate.invoke(it)
+                            }
+                        } ?: throw NotFoundMohistBuildException(version, forgeVersion)
+                    build.originUrl
+                }
+
+            /**
+             * Using local file as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.LocalFile(projectDir.resolve("server.jar")))
+             * ```
+             *
+             * @param path file path
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun LocalFile(path: Path): JarUrl =
+                JarUrl {
+                    "file://${path.toAbsolutePath()}"
+                }
+
+            /**
+             * Using local file as [jarUrl].
+             *
+             * ```
+             * jarUrl.set(LaunchMinecraftServerTask.JarUrl.LocalFile(projectDir.resolve("server.jar")))
+             * ```
+             *
+             * @param file file
+             * @return URL
+             */
+            @Suppress("FunctionName")
+            fun LocalFile(file: File): JarUrl = LocalFile(file.toPath())
         }
-
-        /**
-         * Using local file as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.LocalFile(projectDir.resolve("server.jar")))
-         * ```
-         *
-         * @param path file path
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun LocalFile(path: Path): String = "file://${path.toAbsolutePath()}"
-
-        /**
-         * Using local file as [jarUrl].
-         *
-         * ```
-         * jarUrl.set(LaunchMinecraftServerTask.JarUrl.LocalFile(projectDir.resolve("server.jar")))
-         * ```
-         *
-         * @param file file
-         * @return URL
-         */
-        @Suppress("FunctionName")
-        fun LocalFile(file: File): String = LocalFile(file.toPath())
     }
 }
