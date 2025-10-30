@@ -2,7 +2,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     kotlin("jvm") version "2.0.21" apply false
-    id("com.gradle.plugin-publish") version "1.3.1" apply false
+    id("com.gradle.plugin-publish") version "2.0.0" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jmailen.kotlinter") version "5.2.0"
     id("com.github.ben-manes.versions") version "0.53.0"
