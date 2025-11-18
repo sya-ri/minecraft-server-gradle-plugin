@@ -1,5 +1,8 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import io.gitlab.arturbosch.detekt.Detekt
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.0.21" apply false
@@ -12,6 +15,17 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+
+    tasks.withType<JavaCompile> {
+        targetCompatibility = "1.8"
+        sourceCompatibility = "1.8"
+    }
+
+    tasks.withType<KotlinCompile> {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
+        }
     }
 }
 
