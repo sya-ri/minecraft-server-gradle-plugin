@@ -1,4 +1,5 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -26,6 +27,16 @@ allprojects {
 
     detekt {
         config.from(rootProject.files("../config/detekt/detekt.yml"))
+    }
+
+    tasks.withType<JavaCompile> {
+        targetCompatibility = "1.8"
+    }
+
+    tasks.withType<KotlinCompile> {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
+        }
     }
 }
 
