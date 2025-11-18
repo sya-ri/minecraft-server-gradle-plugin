@@ -56,7 +56,7 @@ tasks.withType<DependencyUpdatesTask> {
 fun isNonStable(version: String) = "^[0-9,.v-]+(-r)?$".toRegex().matches(version).not()
 
 tasks.register("clean", Delete::class.java) {
-    delete(rootProject.buildDir)
+    delete(rootProject.layout.buildDirectory.asFile.get())
 }
 
 tasks.register("reformatAll") {

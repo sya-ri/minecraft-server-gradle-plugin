@@ -63,8 +63,8 @@ task<LaunchMinecraftServerTask>("testPlugin") {
 
     doFirst {
         copy {
-            from(buildDir.resolve("libs/${project.name}.jar"))
-            into(buildDir.resolve("MinecraftServer/plugins"))
+            from(layout.buildDirectory.asFile.get().resolve("libs/${project.name}.jar"))
+            into(layout.buildDirectory.asFile.get().resolve("MinecraftServer/plugins"))
         }
     }
 
@@ -98,12 +98,12 @@ listOf(
 
         doFirst {
             copy {
-                from(buildDir.resolve("libs/${project.name}.jar"))
-                into(buildDir.resolve("MinecraftServer$name/plugins"))
+                from(layout.buildDirectory.asFile.get().resolve("libs/${project.name}.jar"))
+                into(layout.buildDirectory.asFile.get().resolve("MinecraftServer$name/plugins"))
             }
         }
 
-        serverDirectory.set(buildDir.resolve("MinecraftServer$name").absolutePath)
+        serverDirectory.set(layout.buildDirectory.asFile.get().resolve("MinecraftServer$name").absolutePath)
         jarUrl.set(JarUrl.Paper(version))
         agreeEula.set(true)
     }

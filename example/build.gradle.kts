@@ -26,8 +26,8 @@ task<LaunchMinecraftServerTask>("testPlugin") {
 
     doFirst {
         copy {
-            from(buildDir.resolve("libs/${project.name}.jar"))
-            into(buildDir.resolve("MinecraftServer/plugins"))
+            from(layout.buildDirectory.asFile.get().resolve("libs/${project.name}.jar"))
+            into(layout.buildDirectory.asFile.get().resolve("MinecraftServer/plugins"))
         }
     }
 
@@ -40,12 +40,12 @@ task<LaunchMinecraftServerTask>("testPluginMohist") {
 
     doFirst {
         copy {
-            from(buildDir.resolve("libs/${project.name}.jar"))
-            into(buildDir.resolve("MinecraftServerMohist/plugins"))
+            from(layout.buildDirectory.asFile.get().resolve("libs/${project.name}.jar"))
+            into(layout.buildDirectory.asFile.get().resolve("MinecraftServerMohist/plugins"))
         }
     }
 
-    serverDirectory.set(buildDir.resolve("MinecraftServerMohist").absolutePath)
+    serverDirectory.set(layout.buildDirectory.asFile.get().resolve("MinecraftServerMohist").absolutePath)
     jarUrl.set(JarUrl.Mohist("1.20.1"))
     agreeEula.set(true)
 }
@@ -55,13 +55,13 @@ task<LaunchMinecraftServerTask>("testPluginLocal") {
 
     doFirst {
         copy {
-            from(buildDir.resolve("libs/${project.name}.jar"))
-            into(buildDir.resolve("MinecraftServerLocal/plugins"))
+            from(layout.buildDirectory.asFile.get().resolve("libs/${project.name}.jar"))
+            into(layout.buildDirectory.asFile.get().resolve("MinecraftServerLocal/plugins"))
         }
     }
 
-    serverDirectory.set(buildDir.resolve("MinecraftServerLocal").absolutePath)
-    jarUrl.set(JarUrl.LocalFile(buildDir.resolve("MinecraftServer/server.jar"))) // Same as testPlugin
+    serverDirectory.set(layout.buildDirectory.asFile.get().resolve("MinecraftServerLocal").absolutePath)
+    jarUrl.set(JarUrl.LocalFile(layout.buildDirectory.asFile.get().resolve("MinecraftServer/server.jar"))) // Same as testPlugin
     agreeEula.set(true)
 }
 
@@ -85,12 +85,12 @@ listOf(
 
         doFirst {
             copy {
-                from(buildDir.resolve("libs/example.jar"))
-                into(buildDir.resolve("MinecraftServer$name/plugins"))
+                from(layout.buildDirectory.asFile.get().resolve("libs/example.jar"))
+                into(layout.buildDirectory.asFile.get().resolve("MinecraftServer$name/plugins"))
             }
         }
 
-        serverDirectory.set(buildDir.resolve("MinecraftServer$name").absolutePath)
+        serverDirectory.set(layout.buildDirectory.asFile.get().resolve("MinecraftServer$name").absolutePath)
         jarUrl.set(JarUrl.Paper(version))
         agreeEula.set(true)
     }
