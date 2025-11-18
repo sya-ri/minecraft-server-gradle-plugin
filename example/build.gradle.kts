@@ -15,13 +15,13 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 }
 
-task<LaunchMinecraftServerTask>("launchMinecraftServer") {
+tasks.register<LaunchMinecraftServerTask>("launchMinecraftServer") {
     jarUrl.set(JarUrl.Paper("1.19.2"))
     // agreeEula.set(true)
     agreeEula.set(false)
 }
 
-task<LaunchMinecraftServerTask>("testPlugin") {
+tasks.register<LaunchMinecraftServerTask>("testPlugin") {
     dependsOn("build")
 
     doFirst {
@@ -35,7 +35,7 @@ task<LaunchMinecraftServerTask>("testPlugin") {
     agreeEula.set(true)
 }
 
-task<LaunchMinecraftServerTask>("testPluginMohist") {
+tasks.register<LaunchMinecraftServerTask>("testPluginMohist") {
     dependsOn("build")
 
     doFirst {
@@ -50,7 +50,7 @@ task<LaunchMinecraftServerTask>("testPluginMohist") {
     agreeEula.set(true)
 }
 
-task<LaunchMinecraftServerTask>("testPluginLocal") {
+tasks.register<LaunchMinecraftServerTask>("testPluginLocal") {
     dependsOn("build")
 
     doFirst {
@@ -80,7 +80,7 @@ listOf(
     "19" to "1.19.4",
     "20" to "1.20.4",
 ).forEach { (name, version) ->
-    task<LaunchMinecraftServerTask>("testPlugin$name") {
+    tasks.register<LaunchMinecraftServerTask>("testPlugin$name") {
         dependsOn("build")
 
         doFirst {
