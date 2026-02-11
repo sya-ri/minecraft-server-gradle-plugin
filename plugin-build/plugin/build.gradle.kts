@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization") version "2.3.0"
+    kotlin("plugin.serialization") version "2.3.10"
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish")
 }
