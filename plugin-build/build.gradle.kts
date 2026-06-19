@@ -7,7 +7,7 @@ plugins {
     kotlin("jvm") version "2.4.0" apply false
     id("com.gradle.plugin-publish") version "2.1.1" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
-    id("org.jmailen.kotlinter") version "5.4.2"
+    id("org.jmailen.kotlinter") version "5.5.0"
     id("com.github.ben-manes.versions") version "0.54.0"
 }
 
