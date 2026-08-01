@@ -8,7 +8,7 @@ plugins {
     id("com.gradle.plugin-publish") version "2.1.1" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jmailen.kotlinter") version "5.6.0"
-    id("com.github.ben-manes.versions") version "0.56.0"
+    id("com.github.ben-manes.versions") version "0.58.0"
 }
 
 allprojects {
