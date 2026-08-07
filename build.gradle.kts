@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version "2.4.10" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jmailen.kotlinter") version "5.6.0"
-    id("com.github.ben-manes.versions") version "0.59.0"
+    id("com.github.ben-manes.versions") version "0.60.0"
 }
 
 allprojects {
