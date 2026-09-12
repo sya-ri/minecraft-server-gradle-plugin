@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.4.20" apply false
-    id("com.gradle.plugin-publish") version "2.2.0" apply false
+    id("com.gradle.plugin-publish") version "2.2.1" apply false
     id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("org.jmailen.kotlinter") version "5.7.0"
     id("com.github.ben-manes.versions") version "0.62.0"
